@@ -1,19 +1,19 @@
 #leftBar {
-    float:left;
-    width:250px;
+    float: left;
+    width: 250px;
 }
 
-#mainSettings{
-/*	height:200px;*/
+#mainSettings {
+    /*	height:200px;*/
 }
 
-#edgeSettings{
-	overflow:auto;
-	background-color:#eee;
-	height:750px;
-	margin-top:50px;
+#edgeSettings {
+    overflow: auto;
+    background-color: #b6eec2;
+    height: 750px;
+    margin-top: 50px;
 }
 
-#canvasNetwork{
-	margin-left:50px;
+#canvasNetwork {
+    margin-left: 50px;
 }
