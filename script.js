@@ -14,11 +14,11 @@ function cycle() {
 function initSampleNetwork() {
 
     network.addNode(8, 1);
-    network.addNode(5, 1);
-    network.addNode(5, 6);
-    network.addNode(10, 6);
+    network.addNode(5, 3);
+    network.addNode(7, 7);
+    network.addNode(10, 9);
     network.addNode(14, 6);
-    network.addNode(14, 1);
+    network.addNode(15, 3);
     network.addNode(11, 1);
 
     network.addEdge(0, 1, 0);

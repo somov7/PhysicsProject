@@ -57,7 +57,7 @@ function drawEdge(edge) {
     if (Math.abs(angle) > Math.PI / 2)
         angle += Math.PI;
     ctx.translate(middleX, middleY);
-    ctx.rotate(-angle);
+    ctx.rotate(angle);
 
     if (edge.type === 1) {
         ctx.beginPath();
