@@ -7,8 +7,12 @@ function cycle() {
     initialDraw();
     drawNetwork(network);
     updateHTML();
+<<<<<<< HEAD
 	//updateLBar(network);
 	ctx.restore();
+=======
+    ctx.restore();
+>>>>>>> dc80fb5fcb48bfe4e63788e33ac58c4c70f3393f
     window.requestAnimationFrame(cycle);
 }
 
