@@ -15,7 +15,6 @@ canv.onmouseover = function (e) {
 
 canv.onmouseout = function (e) {
     canvasHover = false;
-<<<<<<< HEAD
 };
 
 function createLBarElement(edge){
@@ -55,6 +54,3 @@ function updateLBarElement(edge){
 	//alert(typ.getAttribute("selectedIndex"));
 	//edge.type = typ.getAttribute("selectedIndex");	
 }
-=======
-};
->>>>>>> dc80fb5fcb48bfe4e63788e33ac58c4c70f3393f
