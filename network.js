@@ -1,8 +1,9 @@
 class Node {
-    //number, x, y;
-    constructor(_x, _y) {
+    //id, x, y;
+    constructor(id, _x, _y) {
         this.x = _x;
         this.y = _y;
+		this.id = id;
     }
 }
 
@@ -42,15 +43,16 @@ class Network {
     constructor() {
         this.nodes = [];
         this.edges = [];
-		this.globalID = 0;
+		this.globalNodeID = 0;
+		this.globalEdgeID = 0;
 	}
 
     addNode(_x, _y) {
-        this.nodes.push(new Node(_x, _y));
+        this.nodes.push(new Node(this.globalNodeID++, _x, _y));
     }
 
     addEdge(sNode, eNode, t, param = 0) {
-        let addedEdge = new Edge(this.globalID++, this.nodes[sNode], this.nodes[eNode], t, param);
+        let addedEdge = new Edge(this.globalEdgeID++, this.nodes[sNode], this.nodes[eNode], t, param);
 		this.edges.push(addedEdge);
 		createLBarElement(addedEdge);
 	}

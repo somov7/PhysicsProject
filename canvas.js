@@ -3,6 +3,9 @@ let ctx = canv.getContext("2d");
 const cellSize = 48;
 
 function initialDraw() {
+	ctx.font = "small-caps 10px Serif";
+	ctx.textAlign = "center";
+	ctx.textBaseline= "middle";
     if (!canvasHover)
         return;
     ctx.strokeStyle = "gray";
@@ -30,9 +33,12 @@ function drawNode(node) {
     if (canvasHover) {
         ctx.fillStyle = "white";
         ctx.beginPath();
-        ctx.arc(node.x * cellSize, node.y * cellSize, 5, 0, 2 * Math.PI);
+        ctx.arc(node.x * cellSize, node.y * cellSize, 6, 0, 2 * Math.PI);
         ctx.fill();
         ctx.stroke();
+		ctx.fillStyle = "black";
+		ctx.fillText("" + node.id, node.x * cellSize, node.y * cellSize);
+		ctx.strokeText("" + node.id, node.x * cellSize, node.y * cellSize);
     }
     else {
         ctx.beginPath();
