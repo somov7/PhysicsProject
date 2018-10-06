@@ -61,7 +61,6 @@ function createLBarElement(edge){
 	res.style.width = "100px";
 	res.setAttribute("name", "resistance");
 	res.setAttribute("min", "0");
-	res.setAttribute("max", "1000");
 	res.setAttribute("step", "0.1");
 	res.setAttribute("value", "0");
 	warp.appendChild(res);
@@ -81,6 +80,7 @@ function createLBarElement(edge){
 	cap.setAttribute("type", "number");
 	cap.style.width = "100px";
 	cap.setAttribute("name", "capacity");
+	cap.setAttribute("min", "0");
 	cap.setAttribute("step", "1");
 	cap.setAttribute("value", "0");
 	warp.appendChild(cap);
@@ -100,6 +100,7 @@ function createLBarElement(edge){
 	ind.setAttribute("type", "number");
 	ind.style.width = "100px";
 	ind.setAttribute("name", "inductance");
+	ind.setAttribute("min", "0");
 	ind.setAttribute("step", "1");
 	ind.setAttribute("value", "0");
 	warp.appendChild(ind);
