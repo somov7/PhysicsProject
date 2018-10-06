@@ -1,73 +1,76 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>Калькулятор электрических цепей</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8">
+    <title>Калькулятор электрических цепей</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
 
 <div id="leftBar">
-	<div id="mainSettings">
-		<label>Ток
-			<select name="inputCurrent" id="inputCurrent">
-				<option value="direct">Постоянный</option>
-				<option value="alternating">Переменный</option>
-			</select>
-		</label>
-		<label id="inputFrequencyWrap">
-			</br>Частота</br>
-			<input type="number" name="inputFrequency" id="inputFrequency" value="60" min="0" max="1000" step="0.1" style="width: 100px"></input>
-			ГЦ
-		</label>
-		<label id="inputResistanceWrap">
-			</br>Сопротивление проводника</br>
-			<input type="number" name="inputResistance" id="inputResistance" value="0" min="0" max="1" step="0.001" style="width: 100px"></input>
-			Ом/м
-		</label>
-		
-	</div>
-	<div id="edgeSettings">
-	Вот тут отдельно каждый участок можно поредачить (типа что на этом участке у нас резистор/катушка/конденсатор, их параметры и т. д.)
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	(а ещё я хочу её по высоте до низа экрана)</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	.</br>
-	А ещё тут может быть много участков цепи, поэтому эта шутка должна скроллиться
-	</div>
+    <div id="mainSettings">
+        <label>Ток
+            <select name="inputCurrent" id="inputCurrent">
+                <option value="direct">Постоянный</option>
+                <option value="alternating">Переменный</option>
+            </select>
+        </label>
+        <label id="inputFrequencyWrap">
+            <br>Частота<br>
+            <input type="number" name="inputFrequency" id="inputFrequency" value="60" min="0" max="1000" step="0.1"
+                   style="width: 100px"/>
+            ГЦ
+        </label>
+        <label id="inputResistanceWrap">
+            <br>Сопротивление проводника<br>
+            <input type="number" name="inputResistance" id="inputResistance" value="0" min="0" max="1" step="0.001"
+                   style="width: 100px"/>
+            Ом/м
+        </label>
+
+    </div>
+    <div id="edgeSettings">
+        Вот тут отдельно каждый участок можно поредачить (типа что на этом участке у нас резистор/катушка/конденсатор,
+        их параметры и т. д.)
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        (а ещё я хочу её по высоте до низа экрана)<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        .<br>
+        А ещё тут может быть много участков цепи, поэтому эта шутка должна скроллиться
+    </div>
 </div>
 
 <canvas id="canvasNetwork" width="1300px" height="816px"></canvas>
