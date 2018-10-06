@@ -48,10 +48,11 @@ function drawEdge(edge) {
     ctx.stroke();
     let middleX = (edge.startPoint.x + edge.endPoint.x) * cellSize * 0.5;
     let middleY = (edge.startPoint.y + edge.endPoint.y) * cellSize * 0.5;
-    ctx.fillStyle = "white";
+
     if (edge.type === 0)
         return;
-
+	
+    ctx.fillStyle = "white";
     ctx.save();
     let angle = Math.atan2(edge.startPoint.y - edge.endPoint.y, edge.startPoint.x - edge.endPoint.x);
     if (Math.abs(angle) > Math.PI / 2)
