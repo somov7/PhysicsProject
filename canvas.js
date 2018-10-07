@@ -97,7 +97,7 @@ function drawEdge(edge) {
     }
     else if (edge.type === 4) {
         ctx.fillStyle = "black";
-        if (edge.state) {
+        if (!edge.state) {
             ctx.clearRect(-6, -1, 12, 2);
             ctx.beginPath();
             ctx.moveTo(-7, 0);

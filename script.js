@@ -26,7 +26,7 @@ function initSampleNetwork() {
     network.addEdge(1, 2, 1);
     network.addEdge(2, 3, 2);
     network.addEdge(3, 4, 3);
-    network.addEdge(4, 5, 4);
+    network.addEdge(4, 5, 4, true);
     network.addEdge(5, 6, 5);
 }
 
