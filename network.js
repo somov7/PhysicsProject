@@ -48,13 +48,31 @@ class Network {
 	}
 
     addNode(_x, _y) {
-        this.nodes.push(new Node(this.globalNodeID++, _x, _y));
+        this.nodes.push(new Node(this.globalNodeID, _x, _y));
+		updateAddNewElementDroplists(this.globalNodeID);
+		this.globalNodeID++;
     }
 
-    addEdge(sNode, eNode, t, param = 0) {
-        let addedEdge = new Edge(this.globalEdgeID++, this.nodes[sNode], this.nodes[eNode], t, param);
+    addEdge(sNodeId, eNodeId, t, param = 0) {
+		let sNode, eNode, node;
+		for(let i = 0; i < this.nodes.length; i++){
+			if(this.nodes[i].id == sNodeId)
+				sNode = this.nodes[i];
+			if(this.nodes[i].id == eNodeId)
+				eNode = this.nodes[i];
+		}
+        let addedEdge = new Edge(this.globalEdgeID++, sNode, eNode, t, param);
 		this.edges.push(addedEdge);
 		createLBarElement(addedEdge);
+	}
+	
+	deleteEdge(edge){
+		for(let i = 0; i < this.edges.length; i++)
+			if(this.edges[i].id == edge.id){
+				this.edges.splice(i, 1);
+				deleteElementFromLBar(edge.id);					
+				return;
+			}
 	}
 }
 

@@ -25,3 +25,11 @@ body {
 #canvasNetwork {
     margin-left: 50px;
 }
+
+#addNewElement {
+	position: relative;
+	padding: 10px; 
+	border: 1px solid black; 
+	margin: 2px; 
+	padding-right: 30px; 
+}

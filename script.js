@@ -1,4 +1,26 @@
-let network = new Network();
+let network;
+
+function initial(){
+	network = new Network();
+	let but = document.getElementById("addNewElementButton");
+	but.addEventListener('click', function(){
+		let first = document.getElementById("addNewElementFirstNode").value;
+		let second = document.getElementById("addNewElementSecondNode").value;
+		let typ = document.getElementById("addNewElementType");
+		if(first == second){
+			alert("Нельзя соединить элемент с самим собой");
+			return;
+		}
+		for(let i = 0; i < network.edges.length; i++){
+			let edge = network.edges[i];
+			if((edge.startPoint.id == first && edge.endPoint.id == second) || (edge.endPoint.id == first && edge.startPoint.id == second)){
+				alert("Нельзя создать второй элемент с теми же узлами");
+				return;
+			}
+		}
+		network.addEdge(first, second, typ);
+	})
+}
 
 function cycle() {
     ctx.save();
@@ -30,5 +52,6 @@ function initSampleNetwork() {
     network.addEdge(5, 6, 5);
 }
 
+initial();
 initSampleNetwork();
 cycle();

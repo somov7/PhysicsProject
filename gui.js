@@ -22,10 +22,12 @@ function createLBarElement(edge){
 	let typesRu = ["Проводник", "Резистор", "Конденсатор", "Катушка", "Ключ", "Лампа"];
 	let div = document.createElement("div");
 	div.setAttribute("id", "elementSettings" + edge.id);
-	div.setAttribute("style", "padding: 10px; border: 1px solid black; margin: 2px; padding-right: 30px");
+	div.setAttribute("style", "padding: 10px; border: 1px solid black; margin: 2px; padding-right: 30px; position: relative");
+	
 	let text = document.createTextNode("Участок " + edge.startPoint.id + " <-> " + edge.endPoint.id);
 	div.appendChild(text);
 	div.appendChild(document.createElement("br"));
+
 	
 	/* Type attribute */
 	
@@ -143,6 +145,20 @@ function createLBarElement(edge){
 	warp.appendChild(document.createElement("br"));
 	div.appendChild(warp);
 	
+	/* Delete button */
+	
+	let del = document.createElement("input");
+	del.setAttribute("type", "button");
+	del.setAttribute("value", "Удалить");
+	del.style.top = "10px";
+	del.style.right = "10px";
+	del.style.position = "absolute";
+	del.style.zIndex = "5";
+	del.addEventListener("click", function(){
+		network.deleteEdge(edge);
+	}); 
+	div.appendChild(del);
+	
 	/* Final */
 	
 	document.getElementById("edgeSettings").appendChild(div);
@@ -193,4 +209,19 @@ function updateLBarElement(id, index){
 			document.getElementById("inductanceWarp" + id).setAttribute("hidden", "hidden");
 			document.getElementById("stateWarp" + id).removeAttribute("hidden", "hidden");
 	}
+}
+
+function deleteElementFromLBar(id){
+	document.getElementById("edgeSettings").removeChild(document.getElementById("elementSettings" + id));
+}
+
+function updateAddNewElementDroplists(id){
+	let first = document.getElementById("addNewElementFirstNode");
+	let second = document.getElementById("addNewElementSecondNode");
+	let opt = document.createElement("option");
+	opt.innerHTML = id;
+	first.appendChild(opt);
+	opt = document.createElement("option");
+	opt.innerHTML = id;
+	second.appendChild(opt);	
 }
