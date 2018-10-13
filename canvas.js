@@ -38,7 +38,7 @@ function drawNode(node) {
         ctx.stroke();
 		ctx.fillStyle = "black";
 		ctx.fillText("" + node.id, node.x * cellSize, node.y * cellSize);
-		ctx.strokeText("" + node.id, node.x * cellSize, node.y * cellSize);
+		//ctx.strokeText("" + node.id, node.x * cellSize, node.y * cellSize);
     }
     else {
         ctx.beginPath();
@@ -61,7 +61,7 @@ function drawEdge(edge) {
     ctx.fillStyle = "white";
     ctx.save();
     let angle = Math.atan2(edge.startPoint.y - edge.endPoint.y, edge.startPoint.x - edge.endPoint.x);
-    if (Math.abs(angle) > Math.PI / 2)
+    if (Math.abs(angle) > Math.PI / 2 && edge.type != 6)
         angle += Math.PI;
     ctx.translate(middleX, middleY);
     ctx.rotate(angle);
@@ -125,6 +125,32 @@ function drawEdge(edge) {
         ctx.lineTo(-5, 5);
         ctx.stroke();
     }
+	else if(edge.type == 6){
+        ctx.beginPath();
+        ctx.rect(-4, -16, 8, 32);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(-4, -16);
+        ctx.lineTo(-4, +16);
+        ctx.stroke();
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+        ctx.moveTo(4, -9);
+        ctx.lineTo(4, 9);
+        ctx.stroke();
+		ctx.font = "bold 18px Serif";
+		ctx.fillStyle = "black";
+		if(Math.abs(angle) > Math.PI / 2){
+			ctx.fillText("+", -12, 10);
+			ctx.fillText("-", 12, 6);
+		}
+		else{
+			ctx.fillText("+", -12, -10);
+			ctx.fillText("-", 12, -6);			
+		}
+		ctx.fill();
+	}
+	
     ctx.translate(-middleX, -middleY);
     ctx.restore();
     ctx.fillStyle = "black";

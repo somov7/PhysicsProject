@@ -10,32 +10,6 @@
 <body>
 
 <div id="leftBar">
-    <div id="mainSettings">
-        <label>Ток
-            <select name="inputCurrent" id="inputCurrent">
-                <option value="direct">Постоянный</option>
-                <option value="alternating">Переменный</option>
-            </select>
-        </label>
-        <label id="inputFrequencyWrap">
-            <br>Частота<br>
-            <input type="number" name="inputFrequency" id="inputFrequency" value="60" min="0" max="1000" step="0.1"
-                   style="width: 100px"/>
-            ГЦ
-        </label>
-        <label id="inputResistanceWrap">
-            <br>Сопротивление проводника<br>
-            <input type="number" name="inputResistance" id="inputResistance" value="0" min="0" max="1" step="0.001"
-                   style="width: 100px"/>
-            Ом/м
-        </label>
-        <label id="inputVoltageWrap">
-            <br>Напряжение сети<br>
-            <input type="number" name="inputVoltage" id="inputVoltage" value="220" min="0" max="400" step="1"
-                   style="width: 100px"/>
-            В
-        </label>
-    </div>
     <div id="edgeSettings">
 		<div id="addNewElement">
 			Узлы:
@@ -48,12 +22,6 @@
 			</select>
 			<br>
 			<select id="addNewElementType">
-				<option value="Empty">Проводник</option>
-				<option value="Resistor">Резистор</option>
-				<option value="Condensator">Конденсатор</option>
-				<option value="Coil">Катушка</option>
-				<option value="Switch">Ключ</option>
-				<option value="Lamp">Лампа</option>
 			</select>
 			<input type="button" id="addNewElementButton" value="Добавить" style="position:absolute; top:10px; right:10px">
 		</div>

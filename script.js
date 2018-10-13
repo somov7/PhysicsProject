@@ -1,12 +1,16 @@
 let network;
 
+let types = ["Empty", "Resistor", "Condensator", "Coil", "Switch", "Lamp", "Source"];
+let typesRu = ["Проводник", "Резистор", "Конденсатор", "Катушка", "Ключ", "Лампа", "Источник ЭДС"];
+
+
 function initial(){
 	network = new Network();
 	let but = document.getElementById("addNewElementButton");
 	but.addEventListener('click', function(){
 		let first = document.getElementById("addNewElementFirstNode").value;
 		let second = document.getElementById("addNewElementSecondNode").value;
-		let typ = document.getElementById("addNewElementType");
+		let typ = document.getElementById("addNewElementType").selectedIndex;
 		if(first == second){
 			alert("Нельзя соединить элемент с самим собой");
 			return;
@@ -20,6 +24,13 @@ function initial(){
 		}
 		network.addEdge(first, second, typ);
 	})
+	let drop = document.getElementById("addNewElementType");
+	for(let i = 0; i < types.length; i++){
+		let opt = document.createElement("option");
+		opt.value = types[i];
+		opt.text = typesRu[i];
+		drop.appendChild(opt);
+	}
 }
 
 function cycle() {
@@ -28,7 +39,6 @@ function cycle() {
     ctx.scale(1.5, 1.5);
     initialDraw();
     drawNetwork(network);
-    updateHTML();
 	//updateLBar(network);
 	ctx.restore();
     window.requestAnimationFrame(cycle);
@@ -50,6 +60,7 @@ function initSampleNetwork() {
     network.addEdge(3, 4, 3);
     network.addEdge(4, 5, 4, true);
     network.addEdge(5, 6, 5);
+	network.addEdge(6, 0, 6);
 }
 
 initial();

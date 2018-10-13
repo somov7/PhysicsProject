@@ -4,22 +4,13 @@ body {
 
 #leftBar {
     float: left;
+	overflow-y: auto;
+    height: 99vh;
     width: 250px;
-    height: 100vh;
-}
-
-#mainSettings {
-    /*	height:200px;*/
-	margin: 2px;
-	border: 1px solid black;
-	padding: 10px;
 }
 
 #edgeSettings {
-    overflow: auto;
     background-color: #eee;
-    height: 750px;
-    margin-top: 10px;
 }
 
 #canvasNetwork {
@@ -32,4 +23,8 @@ body {
 	border: 1px solid black; 
 	margin: 2px; 
 	padding-right: 30px; 
+}
+
+input[type="button"] {
+    white-space: normal;
 }
