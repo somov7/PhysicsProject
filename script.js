@@ -40,6 +40,7 @@ function cycle() {
     initialDraw();
     drawNetwork(network);
 	//updateLBar(network);
+	NetworkToGraph(network);
 	ctx.restore();
     window.requestAnimationFrame(cycle);
 }

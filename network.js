@@ -82,13 +82,29 @@ class Network {
 		createLBarElement(addedEdge);
 	}
 	
-	deleteEdge(edge){
+	deleteEdge(id){
 		for(let i = 0; i < this.edges.length; i++)
-			if(this.edges[i].id == edge.id){
+			if(this.edges[i].id == id){
 				this.edges.splice(i, 1);
-				deleteElementFromLBar(edge.id);					
+				deleteElementFromLBar(id);					
 				return;
 			}
+	}
+	
+	deleteNode(id){
+		for(let i = 0; i < this.edges.length; i++){
+			if(this.edges[i].startPoint.id == id || this.edges[i].endPoint.id == id){
+				this.deleteEdge(this.edges[i].id);
+				i--;
+			}
+		}
+		
+		for(let i = 0; i < this.nodes.length; i++){
+			if(this.nodes[i].id == id){
+				this.nodes.splice(i, 1);
+				return;
+			}
+		}
 	}
 }
 

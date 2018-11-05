@@ -194,7 +194,7 @@ function createLBarElement(edge){
 	del.style.position = "absolute";
 	del.style.zIndex = "1";
 	del.addEventListener("click", function(){
-		network.deleteEdge(edge);
+		network.deleteEdge(edge.id);
 	}); 
 	div.appendChild(del);
 	
