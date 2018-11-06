@@ -2,17 +2,10 @@ let idToVertex = new Map();
 let graph;
 	
 class CalcEdge(){
-	constructor(to_, active_, reactive_){
-		this.to = to_;
-		this.active = active_;
-		this.reactive = reactive_;
-		this.current = 0;
-	}
-	impedance(){
-		return Math.sqrt(Math.pow(this.active_, 2) + Math.pow(this.reactive_, 2));
-	}	
-	update(reactive_){
-		this.reactive = reactive_;
+	// edge, to
+	constructor(edge, to){
+		this.edge = edge;
+		this.to = to;
 	}
 }
 	
@@ -20,9 +13,13 @@ function NetworkToGraph(NWork){
 	idToVertex.clear();
 	for(let i = 0; i < NWork.nodes.length; i++)
 		idToVertex.set(NWork.nodes[i].id, i);
-	/*graph.length = idToVertex.size;
+	graph.length = idToVertex.size;
+	for(let i = 0; i < graph.length; i++)
+		graph[i] = [];
 	for(edge: NWork.edges){
-		graph[]
-	}*/
-
+		let s = idToVertex.get(edge.startPoint.id);
+		let t = idToVertex.get(edge.endPoint.id);
+		graph[s].push(CalcEdge(edge, t));
+		graph[t].push(CalcEdge(edge, s));
+	}
 }

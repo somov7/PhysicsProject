@@ -11,12 +11,12 @@ class Node {
 class Edge {
     //Node startNode, endNode
     //Type: Empty, Resistor, Condensator, Coil, Switch, Lamp
-	//Empty: length
+	//Empty: none
     //Resistor: resistance
     //Condensator: capacity
     //Coil: inductance
     //Switch: open
-	//Source: voltage, frequency, inner resistance
+	//Source: voltage, frequency
     constructor(id, sNode, eNode, t, param = 0, param2 = 0, param3 = 0) {
 		this.id = id;
         this.startPoint = sNode;
@@ -24,7 +24,6 @@ class Edge {
         this.type = t;
         switch (t) {
             case 0: //Empty
-				//this.length = param;
                 break;
             case 1: //Resistor
             case 5: //Lamp
@@ -32,11 +31,9 @@ class Edge {
                 break;
             case 2: //Condensator
                 this.capacity = param;
-                this.resistance = param2;
 				break;
             case 3: //Coil
                 this.inductance = param;
-                this.resistance = param2;
                 break;
             case 4: //Switch
                 this.state = param;
@@ -44,7 +41,6 @@ class Edge {
 			case 6: 
 				this.voltage = param;
 				this.frequency = param2;
-                this.resistance = param3;
 				this.smallerIdPlus = (sNode.id > eNode.id ? true : false); // Чисто костыль
         }
     }
