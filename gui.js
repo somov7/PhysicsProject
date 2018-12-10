@@ -250,18 +250,15 @@ function updateLBarElement(id, index){
 			document.getElementById("resistanceWarp" + id).removeAttribute("hidden", "hidden");
 			break;
 		case 2: //Condensator
-			document.getElementById("resistanceWarp" + id).removeAttribute("hidden", "hidden");
 			document.getElementById("capacityWarp" + id).removeAttribute("hidden", "hidden");
 			break;
 		case 3: //Coil
-			document.getElementById("resistanceWarp" + id).removeAttribute("hidden", "hidden");
 			document.getElementById("inductanceWarp" + id).removeAttribute("hidden", "hidden");
 			break;
 		case 4: //Switch
 			document.getElementById("stateWarp" + id).removeAttribute("hidden", "hidden");
 			break;
 		case 6: //Source
-			document.getElementById("resistanceWarp" + id).removeAttribute("hidden", "hidden");
 			document.getElementById("voltageWarp" + id).removeAttribute("hidden", "hidden");
 			document.getElementById("frequencyWarp" + id).removeAttribute("hidden", "hidden");
 			document.getElementById("flipButton" + id).removeAttribute("hidden", "hidden");

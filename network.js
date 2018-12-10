@@ -7,6 +7,7 @@ class Node {
     }
 }
 
+var EdgeEnum = Object.freeze({"Empty":0, "Resistor":1, "Condensator":2, "Coil":3, "Switch":4, "Lamp":5, "Source":6})
 
 class Edge {
     //Node startNode, endNode

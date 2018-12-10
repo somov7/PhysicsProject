@@ -3,6 +3,7 @@ let network;
 let types = ["Empty", "Resistor", "Condensator", "Coil", "Switch", "Lamp", "Source"];
 let typesRu = ["Проводник", "Резистор", "Конденсатор", "Катушка", "Ключ", "Лампа", "Источник ЭДС"];
 
+let time = 0;
 
 function initial(){
 	network = new Network();
@@ -41,10 +42,11 @@ function cycle() {
     drawNetwork(network);
 	//updateLBar(network);
 	NetworkToGraph(network);
+	GraphToMatrix();
 	ctx.restore();
-    window.requestAnimationFrame(cycle);
+    //window.requestAnimationFrame(cycle);
 }
-
+/*
 function initSampleNetwork() {
 
     network.addNode(8, 1);
@@ -63,7 +65,49 @@ function initSampleNetwork() {
     network.addEdge(5, 6, 5);
 	network.addEdge(6, 0, 6);
 }
+*/
+function initSampleNetwork2() {
+
+    network.addNode(3, 1);
+    network.addNode(15, 1);
+    network.addNode(3, 7);
+    network.addNode(15, 7);
+    network.addNode(5, 7);
+    network.addNode(13, 7);
+	network.addNode(5, 4);
+    network.addNode(13, 4);
+	network.addNode(5, 10);
+    network.addNode(13, 10);
+    network.addNode(9, 4);
+    network.addNode(9, 10);
+	
+	network.addEdge(0, 1, 6, 220, 0);
+	network.addEdge(0, 2, 0);
+	network.addEdge(1, 3, 0);
+	network.addEdge(2, 4, 0);
+	network.addEdge(3, 5, 0);
+	network.addEdge(4, 6, 0);
+	network.addEdge(5, 7, 0);
+	network.addEdge(4, 8, 0);
+	network.addEdge(5, 9, 0);
+	network.addEdge(6, 10, 1, 10);
+	network.addEdge(7, 10, 1, 5);
+	network.addEdge(8, 11, 1, 15);
+	network.addEdge(9, 11, 1, 20);
+	network.addEdge(10, 11, 1, 50);
+	
+}
+
+
+
+function debug(){
+	for(let i = 0; i < Matrix.length; i++){
+		console.log("Vertex " + i + " : ");
+		console.log(Matrix[i]);
+	}
+	console.log(Column);
+}
 
 initial();
-initSampleNetwork();
+initSampleNetwork2();
 cycle();
