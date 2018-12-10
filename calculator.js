@@ -73,23 +73,22 @@ let Matrix, MatrixRow, Column;
 function dfs2(v, t){
 	vis[v] = true;
 	if(v == t){
-		console.log(Cycle);
-		for(let i = 0; i < cycle.length; i++){
+		for(let i = 0; i < Cycle.length; i++){
 			edge = Cycle[i];
-			if(edge.edge.type == EdgeEnum["source"]){
+			if(edge.edge.type == EdgeEnum.Source){
 				let currentVoltage = edge.edge.voltage * Math.cos(edge.edge.frequency * time);
-				if(smallerIdPlus != edge.from < edge.to)
+				if(edge.edge.smallerIdPlus != edge.from < edge.to)
 					Column[Column.length - 1] += currentVoltage;
 				else
 					Column[Column.length - 1] -= currentVoltage;
 			}
-			else if(edge.edge.type == EdgeEnum["resistor"] || edge.edge.type == EdgeEnum["lamp"]){
+			else if(edge.edge.type == EdgeEnum.Resistor || edge.edge.type == EdgeEnum.Lamp){
 				if(edge.from < edge.to)
 					MatrixRow[edge.id] = -edge.edge.resistance;
 				else
 					MatrixRow[edge.id] = +edge.edge.resistance;	
 			}
-			else if(edge.edge.type == EdgeEnum["Switch"]){
+			else if(edge.edge.type == EdgeEnum.Switch){
 				if(edge.edge.state)
 					MatrixRow[edge.id] = Infinity;	
 				else
@@ -102,7 +101,6 @@ function dfs2(v, t){
 		return;
 	for(let i = 0; i < tree[v].length; i++){
 		edge = tree[v][i];
-		console.log(edge);
 		if(!vis[edge.to]){
 			Cycle.push(edge);
 			dfs2(edge.to, t);
@@ -136,25 +134,7 @@ function GraphToMatrix(){
 		flag = false;
 		Column.push(0);
 		edge = nonTree[i];
-		if(edge.edge.type == EdgeEnum["source"]){
-			let currentVoltage = edge.edge.voltage * Math.cos(edge.edge.frequency * time);
-			if(smallerIdPlus != edge.from < edge.to)
-				Column[Column.length - 1] += currentVoltage;
-			else
-				Column[Column.length - 1] -= currentVoltage;
-		}
-		else if(edge.edge.type == EdgeEnum["resistor"] || edge.edge.type == EdgeEnum["lamp"]){
-			if(edge.from < edge.to)
-				MatrixRow[edge.id] -= edge.edge.resistance;
-			else
-				MatrixRow[edge.id] += edge.edge.resistance;	
-		}
-		else if(edge.edge.type == EdgeEnum["Switch"]){
-			if(edge.edge.state)
-				MatrixRow[edge.id] = Infinity;	
-			else
-				MatrixRow[edge.id] = 0;
-		}
+		Cycle.push(edge);
 		//console.log(edge);
 		dfs2(edge.to, edge.from);
 		Matrix.push(MatrixRow);
