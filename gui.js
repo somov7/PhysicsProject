@@ -140,6 +140,31 @@ function createLBarElement(edge){
 	warp.appendChild(document.createElement("br"));
 	div.appendChild(warp);
 	 
+	/* Power attributes */
+	
+	warp = document.createElement("label");
+	let power = document.createElement("input");
+	text = document.createTextNode("Рабочая мощность: ");
+	warp.setAttribute("name", "powerWarp");
+	warp.setAttribute("id", "powerWarp" + edge.id);
+	warp.appendChild(text);	
+	warp.appendChild(document.createElement("br"));
+	power.setAttribute("type", "number");
+	power.style.width = "100px";
+	power.setAttribute("name", "power");
+	power.setAttribute("id", "power" + edge.id); 
+	power.setAttribute("min", "0");
+	power.setAttribute("step", "0.001");
+	power.setAttribute("value", "0");
+	power.addEventListener('change', function() {
+		updateElementFromLBar(edge);
+	});
+	warp.appendChild(power);
+	text = document.createTextNode(" Вт");
+	warp.appendChild(text);
+	warp.appendChild(document.createElement("br"));
+	div.appendChild(warp);
+	
 	/* Induction attributes */
 	
 	warp = document.createElement("label");
@@ -223,13 +248,15 @@ function updateElementFromLBar(edge){
 	let t = document.getElementById("resistance" + edge.id).value;
 	edge.resistance = parseFloat(t);
 	t = document.getElementById("voltage" + edge.id).value;
-	edge.resistance = parseFloat(t);
-	t = document.getElementById("frequency" + edge.id).value;
 	edge.voltage = parseFloat(t);
-	t = document.getElementById("capacity" + edge.id).value;
+	t = document.getElementById("frequency" + edge.id).value;
 	edge.frequency = parseFloat(t);
+	t = document.getElementById("capacity" + edge.id).value;
+	edge.capacity = parseFloat(t);
 	t = document.getElementById("inductance" + edge.id).value;
 	edge.inductance = parseFloat(t);
+	t = document.getElementById("power" + edge.id).value;
+	edge.power = parseFloat(t);
 	t = document.getElementById("state" + edge.id).checked;
 	edge.state = t;
 }
@@ -242,26 +269,27 @@ function updateLBarElement(id, index){
 	document.getElementById("voltageWarp" + id).setAttribute("hidden", "hidden");
 	document.getElementById("frequencyWarp" + id).setAttribute("hidden", "hidden");
 	document.getElementById("flipButton" + id).setAttribute("hidden", "hidden");
+	document.getElementById("powerWarp" + id).setAttribute("hidden", "hidden");
 	switch(index){
 		case 0: //Empty
 			break;
 		case 1: //Resistor
-		case 5: //Lamp
 			document.getElementById("resistanceWarp" + id).removeAttribute("hidden", "hidden");
 			break;
 		case 2: //Condensator
-			document.getElementById("resistanceWarp" + id).removeAttribute("hidden", "hidden");
 			document.getElementById("capacityWarp" + id).removeAttribute("hidden", "hidden");
 			break;
 		case 3: //Coil
-			document.getElementById("resistanceWarp" + id).removeAttribute("hidden", "hidden");
 			document.getElementById("inductanceWarp" + id).removeAttribute("hidden", "hidden");
 			break;
 		case 4: //Switch
 			document.getElementById("stateWarp" + id).removeAttribute("hidden", "hidden");
 			break;
-		case 6: //Source
+		case 5: //Lamp
 			document.getElementById("resistanceWarp" + id).removeAttribute("hidden", "hidden");
+			document.getElementById("powerWarp" + id).removeAttribute("hidden", "hidden");
+			break;
+		case 6: //Source
 			document.getElementById("voltageWarp" + id).removeAttribute("hidden", "hidden");
 			document.getElementById("frequencyWarp" + id).removeAttribute("hidden", "hidden");
 			document.getElementById("flipButton" + id).removeAttribute("hidden", "hidden");

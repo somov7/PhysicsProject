@@ -7,6 +7,7 @@ class Node {
     }
 }
 
+var EdgeEnum = Object.freeze({"Empty":0, "Resistor":1, "Condensator":2, "Coil":3, "Switch":4, "Lamp":5, "Source":6});
 
 class Edge {
     //Node startNode, endNode
@@ -15,9 +16,10 @@ class Edge {
     //Resistor: resistance
     //Condensator: capacity
     //Coil: inductance
+	//Lamp: resistance, power
     //Switch: open
 	//Source: voltage, frequency
-    constructor(id, sNode, eNode, t, param = 0, param2 = 0, param3 = 0) {
+    constructor(id, sNode, eNode, t, param = 0, param2 = 0) {
 		this.id = id;
         this.startPoint = sNode;
         this.endPoint = eNode;
@@ -25,8 +27,9 @@ class Edge {
         switch (t) {
             case 0: //Empty
                 break;
-            case 1: //Resistor
             case 5: //Lamp
+				this.power = param2;
+			case 1: //Resistor
                 this.resistance = param;
                 break;
             case 2: //Condensator
@@ -65,7 +68,7 @@ class Network {
 		this.globalNodeID++;
     }
 
-    addEdge(sNodeId, eNodeId, t, param = 0) {
+    addEdge(sNodeId, eNodeId, t, param = 0, param2 = 0) {
 		let sNode, eNode, node;
 		for(let i = 0; i < this.nodes.length; i++){
 			if(this.nodes[i].id == sNodeId)
@@ -73,7 +76,7 @@ class Network {
 			if(this.nodes[i].id == eNodeId)
 				eNode = this.nodes[i];
 		}
-        let addedEdge = new Edge(this.globalEdgeID++, sNode, eNode, t, param);
+        let addedEdge = new Edge(this.globalEdgeID++, sNode, eNode, t, param, param2);
 		this.edges.push(addedEdge);
 		createLBarElement(addedEdge);
 	}

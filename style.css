@@ -5,7 +5,8 @@ body {
 #leftBar {
     float: left;
 	overflow-y: auto;
-    height: 99vh;
+    height: calc(100% - 100px);
+	width: -moz-calc(100% - 100px);
     width: 250px;
 }
 
