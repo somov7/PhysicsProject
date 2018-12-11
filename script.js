@@ -123,5 +123,5 @@ function debug(){
 }
 
 initial();
-initSampleNetwork3();
+initSampleNetwork2();
 cycle();
