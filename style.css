@@ -4,18 +4,20 @@ body {
 
 #leftBar {
     float: left;
-	overflow-y: auto;
-    height: calc(100% - 100px);
-	width: -moz-calc(100% - 100px);
     width: 250px;
+    height: 100hv;
 }
 
 #edgeSettings {
+	overflow-y: auto;
+    height: calc(100vh - 100px);
+	height: -moz-calc(100vh - 100px);
     background-color: #eee;
+	margin-bottom: 10px;
 }
 
 #canvasNetwork {
-    margin-left: 50px;
+    margin-left: 10px;
 }
 
 #addNewElement {
@@ -24,6 +26,11 @@ body {
 	border: 1px solid black; 
 	margin: 2px; 
 	padding-right: 30px; 
+}
+
+#calcButton{
+	width: 100%;
+	height: 60px;
 }
 
 input[type="button"] {

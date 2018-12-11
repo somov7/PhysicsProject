@@ -1,5 +1,6 @@
 let canvasHover = false;
 
+
 canv.onmouseover = function (e) {
     canvasHover = true;
 };
@@ -7,6 +8,16 @@ canv.onmouseover = function (e) {
 canv.onmouseout = function (e) {
     canvasHover = false;
 };
+
+$("#calcButton").click(function(){
+	calculate();
+	let message = "";
+	for(let i = 0; i < network.edges.length; i++){
+		edge = network.edges[i];
+		message += edge.startPoint.id + "<->" + edge.endPoint.id + ": " + Currency[idToEdge.get(edge.id)] + "\n";
+	}
+	alert(message);
+});
 
 function createLBarElement(edge){
 	let div = document.createElement("div");

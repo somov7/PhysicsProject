@@ -6,10 +6,6 @@ let tree;
 let log = true;
 let time;
 	
-let Test = [[1, 2, 3],
-			[4, 5 ,6],
-			[7, 8, 9]]
-	
 class CalcEdge{
 	// edge, from, to, id
 	constructor(edge, from, to, id){
@@ -153,7 +149,6 @@ function calculate(){
 	GraphToMatrix();
 	for(let i = 0; i < 1; i++){
 		Currency = math.lusolve(Matrix, Column);
-		console.log(Currency);
 		time += deltaTime;
 	}
 }
