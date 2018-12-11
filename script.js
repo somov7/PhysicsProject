@@ -122,7 +122,6 @@ function debug(){
 	console.log(Column);
 }
 
-
 initial();
 initSampleNetwork3();
 cycle();
