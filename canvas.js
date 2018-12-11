@@ -117,7 +117,11 @@ function drawEdge(edge) {
     else if (edge.type === 5) {
         ctx.beginPath();
         ctx.arc(0, 0, 10, 0, 2 * Math.PI);
-		let color = scale(Math.pow(Currency[idToEdge.get(edge.id)], 2) * edge.resistance, 0, edge.power, 255, 0);
+		let color;
+		if(typeof idToEdge == 'undefined' || typeof idToEdge.get(edge.id) == 'undefined')
+			color = 255;
+		else
+			color = scale(Math.pow(Currency[idToEdge.get(edge.id)], 2) * edge.resistance, 0, edge.power, 255, 0);
 		console.log(color);
 		ctx.fillStyle = "rgb(255,255," + color + ")";
         ctx.fill();
