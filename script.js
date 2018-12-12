@@ -39,16 +39,12 @@ function initial(){
 function cycle() {
     ctx.save();
     ctx.clearRect(0, 0, canv.width, canv.height);
-    ctx.scale(1.5, 1.5);
     initialDraw();
     drawNetwork(network);
-	//updateLBar(network);
-	//NetworkToGraph(network);
-	//GraphToMatrix();
 	ctx.restore();
     window.requestAnimationFrame(cycle);
 }
-/*
+
 function initSampleNetwork() {
 
     network.addNode(8, 1);
@@ -67,7 +63,7 @@ function initSampleNetwork() {
     network.addEdge(5, 6, 5);
 	network.addEdge(6, 0, 6);
 }
-*/
+
 function initSampleNetwork2() {
 
     network.addNode(3, 1);
@@ -108,7 +104,7 @@ function initSampleNetwork3() {
     network.addNode(3, 1);
 
 	network.addEdge(0, 1, 6, 3);
-	network.addEdge(1, 2, 0);
+	network.addEdge(1, 2, 4);
 	network.addEdge(2, 3, 5, 1000);
 	network.addEdge(3, 0, 0);
 	
@@ -123,5 +119,5 @@ function debug(){
 }
 
 initial();
-initSampleNetwork2();
+initSampleNetwork3();
 cycle();

@@ -90,7 +90,7 @@ function dfs2(v, t){
 					MatrixRow[edge.id] = +edge.edge.resistance;	
 			}
 			else if(edge.edge.type == EdgeEnum.Switch){
-				if(edge.edge.state)
+				if(!edge.edge.state)
 					MatrixRow[edge.id] = Infinity;	
 				else
 					MatrixRow[edge.id] = 0;

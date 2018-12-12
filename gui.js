@@ -1,6 +1,5 @@
-let canvasHover = false;
-
-
+let canvasHover = true;
+/*
 canv.onmouseover = function (e) {
     canvasHover = true;
 };
@@ -8,7 +7,13 @@ canv.onmouseover = function (e) {
 canv.onmouseout = function (e) {
     canvasHover = false;
 };
-
+*/
+$(document).ready(function() {
+	$('#showGridCheckbox').is('checked');
+	$('#showGridCheckbox').change(function() {
+        canvasHover = !canvasHover;
+    });
+});
 $("#calcButton").click(function(){
 	calculate();
 	let message = "";
@@ -116,7 +121,7 @@ function createLBarElement(edge){
 	res.setAttribute("id", "resistance" + edge.id);
 	res.setAttribute("min", "0");
 	res.setAttribute("step", "0.1");
-	res.setAttribute("value", "0");
+	res.setAttribute("value", "1000");
 	res.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});
@@ -141,7 +146,7 @@ function createLBarElement(edge){
 	cap.setAttribute("id", "capacity" + edge.id); 
 	cap.setAttribute("min", "0");
 	cap.setAttribute("step", "1");
-	cap.setAttribute("value", "0");
+	cap.setAttribute("value", "1");
 	cap.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});
@@ -166,7 +171,7 @@ function createLBarElement(edge){
 	power.setAttribute("id", "power" + edge.id); 
 	power.setAttribute("min", "0");
 	power.setAttribute("step", "0.001");
-	power.setAttribute("value", "0");
+	power.setAttribute("value", "60");
 	power.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});
@@ -191,7 +196,7 @@ function createLBarElement(edge){
 	ind.setAttribute("id", "inductance" + edge.id);
 	ind.setAttribute("min", "0");
 	ind.setAttribute("step", "1");
-	ind.setAttribute("value", "0");
+	ind.setAttribute("value", "100");
 	ind.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});

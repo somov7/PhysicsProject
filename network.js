@@ -19,7 +19,7 @@ class Edge {
 	//Lamp: resistance, power
     //Switch: open
 	//Source: voltage, frequency
-    constructor(id, sNode, eNode, t, param = 0, param2 = 0) {
+    constructor(id, sNode, eNode, t, param, param2) {
 		this.id = id;
         this.startPoint = sNode;
         this.endPoint = eNode;
@@ -28,22 +28,22 @@ class Edge {
             case 0: //Empty
                 break;
             case 5: //Lamp
-				this.power = param2;
+				this.power = (typeof param2 == 'undefined' ? 60 : param2);
 			case 1: //Resistor
-                this.resistance = param;
+                this.resistance = (typeof param == 'undefined' ? 1000 : param);
                 break;
             case 2: //Condensator
-                this.capacity = param;
+                this.capacity = (typeof param == 'undefined' ? 1 : param);
 				break;
             case 3: //Coil
-                this.inductance = param;
+                this.inductance = (typeof param == 'undefined' ? 100 : param);
                 break;
             case 4: //Switch
-                this.state = param;
+                this.state = (typeof param == 'undefined' ? true : param);
 				break;
 			case 6: 
-				this.voltage = param;
-				this.frequency = param2;
+				this.voltage = (typeof param == 'undefined' ? 220 : param);
+				this.frequency = (typeof param2 == 'undefined' ? 0 : param2);
 				this.smallerIdPlus = (sNode.id > eNode.id ? true : false); // Чисто костыль
         }
     }
@@ -68,7 +68,7 @@ class Network {
 		this.globalNodeID++;
     }
 
-    addEdge(sNodeId, eNodeId, t, param = 0, param2 = 0) {
+    addEdge(sNodeId, eNodeId, t, param, param2) {
 		let sNode, eNode, node;
 		for(let i = 0; i < this.nodes.length; i++){
 			if(this.nodes[i].id == sNodeId)
@@ -107,5 +107,7 @@ class Network {
 	}
 }
 
-
-
+function fn(a, b){
+	console.log(a);
+	console.log(b);
+}

@@ -3,9 +3,9 @@ let ctx = canv.getContext("2d");
 const cellSize = 48;
 
 function initialDraw() {
-	canv.width = window.innerWidth - 320;
+	canv.width = window.innerWidth - 300;
 	canv.height = window.innerHeight - 20;
-	ctx.scale(1.5, 1.5);
+    ctx.scale(1.5, 1.5);
 	ctx.font = "small-caps 10px Serif";
 	ctx.textAlign = "center";
 	ctx.textBaseline= "middle";
@@ -122,7 +122,6 @@ function drawEdge(edge) {
 			color = 255;
 		else
 			color = scale(Math.pow(Currency[idToEdge.get(edge.id)], 2) * edge.resistance, 0, edge.power, 255, 0);
-		console.log(color);
 		ctx.fillStyle = "rgb(255,255," + color + ")";
         ctx.fill();
         ctx.stroke();
