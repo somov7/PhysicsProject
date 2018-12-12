@@ -1,13 +1,5 @@
 let canvasHover = true;
-/*
-canv.onmouseover = function (e) {
-    canvasHover = true;
-};
 
-canv.onmouseout = function (e) {
-    canvasHover = false;
-};
-*/
 $(document).ready(function() {
 	$('#showGridCheckbox').is('checked');
 	$('#showGridCheckbox').change(function() {
@@ -19,7 +11,7 @@ $("#calcButton").click(function(){
 	let message = "";
 	for(let i = 0; i < network.edges.length; i++){
 		edge = network.edges[i];
-		message += edge.startPoint.id + "<->" + edge.endPoint.id + ": " + Currency[idToEdge.get(edge.id)] + "\n";
+		message += edge.startPoint.id + "<->" + edge.endPoint.id + ": " + math.round(accumulator[idToEdge.get(edge.id)], 5) + "\n";
 	}
 	alert(message);
 });
@@ -71,7 +63,7 @@ function createLBarElement(edge){
 	volt.setAttribute("id", "voltage" + edge.id);
 	volt.setAttribute("min", "0");
 	volt.setAttribute("step", "0.1");
-	volt.setAttribute("value", "220");
+	volt.setAttribute("value", edge.voltage);
 	volt.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});
@@ -96,7 +88,7 @@ function createLBarElement(edge){
 	freq.setAttribute("id", "frequency" + edge.id);
 	freq.setAttribute("min", "0");
 	freq.setAttribute("step", "1");
-	freq.setAttribute("value", "0");
+	freq.setAttribute("value", edge.frequency);
 	freq.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});
@@ -121,7 +113,7 @@ function createLBarElement(edge){
 	res.setAttribute("id", "resistance" + edge.id);
 	res.setAttribute("min", "0");
 	res.setAttribute("step", "0.1");
-	res.setAttribute("value", "1000");
+	res.setAttribute("value", edge.resistance);
 	res.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});
@@ -146,7 +138,7 @@ function createLBarElement(edge){
 	cap.setAttribute("id", "capacity" + edge.id); 
 	cap.setAttribute("min", "0");
 	cap.setAttribute("step", "1");
-	cap.setAttribute("value", "1");
+	cap.setAttribute("value", edge.capacity);
 	cap.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});
@@ -171,7 +163,7 @@ function createLBarElement(edge){
 	power.setAttribute("id", "power" + edge.id); 
 	power.setAttribute("min", "0");
 	power.setAttribute("step", "0.001");
-	power.setAttribute("value", "60");
+	power.setAttribute("value", edge.power);
 	power.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});
@@ -196,7 +188,7 @@ function createLBarElement(edge){
 	ind.setAttribute("id", "inductance" + edge.id);
 	ind.setAttribute("min", "0");
 	ind.setAttribute("step", "1");
-	ind.setAttribute("value", "100");
+	ind.setAttribute("value", edge.inductance);
 	ind.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});
@@ -217,7 +209,10 @@ function createLBarElement(edge){
 	sta.setAttribute("type", "checkbox");
 	sta.setAttribute("name", "state");
 	sta.setAttribute("id", "state" + edge.id);
-	sta.setAttribute("checked", "checked");
+	if(edge.state)
+		sta.checked = true;
+	else
+		sta.checked = false;	
 	sta.addEventListener('change', function() {
 		updateElementFromLBar(edge);
 	});

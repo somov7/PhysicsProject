@@ -24,28 +24,40 @@ class Edge {
         this.startPoint = sNode;
         this.endPoint = eNode;
         this.type = t;
-        switch (t) {
-            case 0: //Empty
-                break;
-            case 5: //Lamp
-				this.power = (typeof param2 == 'undefined' ? 60 : param2);
-			case 1: //Resistor
-                this.resistance = (typeof param == 'undefined' ? 1000 : param);
-                break;
-            case 2: //Condensator
-                this.capacity = (typeof param == 'undefined' ? 1 : param);
-				break;
-            case 3: //Coil
-                this.inductance = (typeof param == 'undefined' ? 100 : param);
-                break;
-            case 4: //Switch
-                this.state = (typeof param == 'undefined' ? true : param);
-				break;
-			case 6: 
-				this.voltage = (typeof param == 'undefined' ? 220 : param);
-				this.frequency = (typeof param2 == 'undefined' ? 0 : param2);
-				this.smallerIdPlus = (sNode.id > eNode.id ? true : false); // Чисто костыль
-        }
+		this.power = 60;
+		this.resistance = 1000;
+		this.capacity = 1;
+		this.inductance = 100;
+		this.state = true;
+		this.voltage = 220;
+		this.frequency = 0;
+		this.smallerIdPlus = (sNode.id > eNode.id ? true : false);
+        if(typeof param != 'undefined')
+			switch (t) {
+				case 1: //Resistor
+				case 5: //Lamp
+					this.resistance = param;
+					break;
+				case 2: //Condensator
+					this.capacity = param;
+					break;
+				case 3: //Coil
+					this.inductance = param;
+					break;
+				case 4: //Switch
+					this.state = param;
+					break;
+				case 6: //Source
+					this.voltage = param;
+			}
+		if(typeof param2 != 'undefined')
+			switch (t) {
+				case 5: // Lamp
+					this.power = param2;
+					break;
+				case 6: // Source
+					this.frequency = param2;
+			}	
     }
 	flip(){
 		let tNode = this.startPoint;
@@ -105,9 +117,4 @@ class Network {
 			}
 		}
 	}
-}
-
-function fn(a, b){
-	console.log(a);
-	console.log(b);
 }

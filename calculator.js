@@ -2,9 +2,11 @@ let idToVertex = new Map();
 let idToEdge = new Map();
 let graph;
 let Currency;
+let accumulator;
 let tree;
 let log = true;
 let time;
+let freqs;
 	
 class CalcEdge{
 	// edge, from, to, id
@@ -19,14 +21,23 @@ class CalcEdge{
 function NetworkToGraph(NWork){
 	idToVertex.clear();
 	graph = [];
+	freqs = 0;
 	for(let i = 0; i < NWork.nodes.length; i++)
 		idToVertex.set(NWork.nodes[i].id, i);
 	graph.length = idToVertex.size;
 	for(let i = 0; i < graph.length; i++)
 		graph[i] = [];
+	voltages = new Array(network.edges.length);
 	for(let i = 0; i < NWork.edges.length; i++){
 		edge = NWork.edges[i];
+		voltages[i] = [];
 		idToEdge.set(edge.id, i);
+		if(edge.type == EdgeEnum.Source && edge.frequency > 0){
+			if(freqs == 0)
+				freqs = edge.frequency;
+			else
+				freqs = math.gcd(freqs, edge.frequency);
+		}
 		let s = idToVertex.get(edge.startPoint.id);
 		let t = idToVertex.get(edge.endPoint.id);
 		graph[s].push(new CalcEdge(edge, s, t, i));
@@ -37,6 +48,7 @@ function NetworkToGraph(NWork){
 let vis;
 let visedge;
 let nonTree;
+let voltages;
 	
 function dfs(v){
 	vis[v] = true;
@@ -69,7 +81,7 @@ function TreeBuild(){
 
 let Cycle;
 let flag;
-let Matrix, MatrixRow, Column;
+let Matrix, NumMatrix, MatrixRow, Column;
 
 function dfs2(v, t){
 	vis[v] = true;
@@ -77,11 +89,13 @@ function dfs2(v, t){
 		for(let i = 0; i < Cycle.length; i++){
 			edge = Cycle[i];
 			if(edge.edge.type == EdgeEnum.Source){
-				let currentVoltage = edge.edge.voltage * Math.cos(edge.edge.frequency * time);
+				/*let currentVoltage = edge.edge.voltage * Math.cos(edge.edge.frequency * time);
 				if(edge.edge.smallerIdPlus == edge.from < edge.to)
 					Column[Column.length - 1] += currentVoltage;
 				else
 					Column[Column.length - 1] -= currentVoltage;
+				*/
+				voltages[Matrix.length].push(edge);
 			}
 			else if(edge.edge.type == EdgeEnum.Resistor || edge.edge.type == EdgeEnum.Lamp){
 				if(edge.from < edge.to)
@@ -112,11 +126,9 @@ function dfs2(v, t){
 
 function GraphToMatrix(){
 	Matrix = [];
-	Column = [];
 	//First Kirchoff's Law
 	for(let i = 0; i < graph.length - 1; i++){
 		MatrixRow = new Array(network.edges.length).fill(0);
-		Column.push(0);
 		for(let j = 0; j < graph[i].length; j++){
 			let edge = graph[i][j];
 			if(edge.to > i)
@@ -133,7 +145,6 @@ function GraphToMatrix(){
 		MatrixRow = new Array(network.edges.length).fill(0);
 		Cycle = [];// new Array(0);
 		flag = false;
-		Column.push(0);
 		edge = nonTree[i];
 		Cycle.push(edge);
 		//console.log(edge);
@@ -142,13 +153,45 @@ function GraphToMatrix(){
 	}
 }
 
+function generateColumn(){
+	Column = new Array(Matrix.length).fill(0);
+	for(let i = 0; i < voltages.length; i++){
+		for(let j = 0; j < voltages[i].length; j++){
+			let edge = voltages[i][j];
+			if(edge.edge.type == EdgeEnum.Source){
+				let currentVoltage = edge.edge.voltage * Math.cos(edge.edge.frequency * time);
+				if(edge.edge.smallerIdPlus == edge.from < edge.to)
+					Column[i] += currentVoltage;
+				else
+					Column[i] -= currentVoltage;
+			}
+		}
+	}
+}
+
+function accumulate(){
+	for(let i = 0; i < Currency.length; i++)
+		accumulator[i] += Currency[i] * Currency[i] * deltaTime;
+}
+
 function calculate(){
 	time = 0;
-	let deltaTime = 0.0001;
+	let limit;
 	NetworkToGraph(network);
 	GraphToMatrix();
-	for(let i = 0; i < 1; i++){
+	accumulator = new Array(Matrix.length).fill(0);
+	if(freqs == 0)
+		limit = deltaTime = 1;
+	else{
+		limit = Math.PI * 2 / freqs;
+		deltaTime = 0.0001 * limit;
+	}
+	while(time < limit){
+		generateColumn();
 		Currency = math.lusolve(Matrix, Column);
+		accumulate();
 		time += deltaTime;
 	}
+	for(let i = 0; i < accumulator.length; i++)
+		accumulator[i] = Math.sqrt(accumulator[i] / limit);
 }

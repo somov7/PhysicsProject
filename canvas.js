@@ -4,7 +4,7 @@ const cellSize = 48;
 
 function initialDraw() {
 	canv.width = window.innerWidth - 300;
-	canv.height = window.innerHeight - 20;
+	canv.height = window.innerHeight - 35;
     ctx.scale(1.5, 1.5);
 	ctx.font = "small-caps 10px Serif";
 	ctx.textAlign = "center";

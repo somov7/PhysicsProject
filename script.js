@@ -105,7 +105,7 @@ function initSampleNetwork3() {
 
 	network.addEdge(0, 1, 6, 3);
 	network.addEdge(1, 2, 4);
-	network.addEdge(2, 3, 5, 1000);
+	network.addEdge(2, 3, 5, 1000, 1);
 	network.addEdge(3, 0, 0);
 	
 }

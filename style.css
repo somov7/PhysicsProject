@@ -19,6 +19,7 @@ body {
 #canvasNetwork {
     margin-left: 10px;
 	border: 1px solid black;
+	margin-top: 1px;
 }
 
 #addNewElement {
@@ -39,14 +40,18 @@ body {
 	float: right;
 	z-index: 1;
 	bottom: 30px;
-	right: 15px;
+	right: 30px;
 	background-color: white;
 	font-variant: small-caps;
-	font-size: 14px;
+	font-size: 15px;
 	-webkit-user-select: none; /* Safari */        
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+/Edge */
 	user-select: none; /* Standard */
+}
+
+#showGridCheckbox{
+  vertical-align: middle;
 }
 
 input[type="button"] {
