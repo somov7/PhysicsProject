@@ -19,20 +19,20 @@ class CalcEdge{
 	}
 }
 	
-function NetworkToGraph(NWork){
+function NetworkToGraph(){
 	idToVertex.clear();
 	graph = [];
 	freqs = 0;
 	if(network.nodes.length == 0)
 		return;
-	for(let i = 0; i < NWork.nodes.length; i++)
-		idToVertex.set(NWork.nodes[i].id, i);
+	for(let i = 0; i < network.nodes.length; i++)
+		idToVertex.set(network.nodes[i].id, i);
 	graph.length = idToVertex.size;
 	for(let i = 0; i < graph.length; i++)
 		graph[i] = [];
 	voltages = new Array(network.edges.length);
-	for(let i = 0; i < NWork.edges.length; i++){
-		edge = NWork.edges[i];
+	for(let i = 0; i < network.edges.length; i++){
+		edge = network.edges[i];
 		voltages[i] = [];
 		idToEdge.set(edge.id, i);
 		if(edge.type == EdgeEnum.Source && edge.frequency > 0){
@@ -205,7 +205,7 @@ function calculate(){
 	time = 0;
 	let limit;
 	errNetwork = "";
-	NetworkToGraph(network);
+	NetworkToGraph();
 	if(!checkGraph())
 		return;
 	GraphToMatrix();

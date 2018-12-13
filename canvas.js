@@ -41,9 +41,13 @@ function drawNode(node) {
         ctx.arc(node.x * cellSize, node.y * cellSize, 6, 0, 2 * Math.PI);
         ctx.fill();
         ctx.fillStyle = "black";
-		if(hoverX == node.x && hoverY == node.y && closeEnough){
-			ctx.strokeStyle = ctx.fillStyle = "red";
-			hoverNode = node.id;
+		if((!clicked && hoverNode == node.id) || (clicked && startNode == node.id)){
+			if(clicked && startNode == hoverNode)
+				ctx.strokeStyle = ctx.fillStyle = "#ff6666";			
+			else if(clicked && startNode != hoverNode)
+				ctx.strokeStyle = ctx.fillStyle = "black";
+			else
+				ctx.strokeStyle = ctx.fillStyle = "red";	
 		}
 		else
 			ctx.strokeStyle = ctx.fillStyle = "black";
@@ -60,7 +64,11 @@ function drawNode(node) {
 function drawEdge(edge) {
     ctx.beginPath();
     ctx.moveTo(edge.startPoint.x * cellSize, edge.startPoint.y * cellSize);
-    ctx.lineTo(edge.endPoint.x * cellSize, edge.endPoint.y * cellSize);
+    ctx.lineTo(edge.endPoint.x * cellSize, edge.endPoint.y * cellSize);	
+	
+	if(edge.id == hoverEdge && clicked)
+		ctx.strokeStyle = "red";
+
     ctx.stroke();
     let middleX = (edge.startPoint.x + edge.endPoint.x) * cellSize * 0.5;
     let middleY = (edge.startPoint.y + edge.endPoint.y) * cellSize * 0.5;
@@ -75,6 +83,7 @@ function drawEdge(edge) {
         angle += Math.PI;
     ctx.translate(middleX, middleY);
     ctx.rotate(angle);
+
 
     if (edge.type === 1) {
         ctx.beginPath();
@@ -172,24 +181,51 @@ function drawEdge(edge) {
     ctx.fillStyle = "black";
 }
 
-function drawEdges(NWork) {
-    for (let i = 0; i < NWork.edges.length; i++)
-        drawEdge(NWork.edges[i]);
+function drawEdges() {
+    for (let i = 0; i < network.edges.length; i++)
+        drawEdge(network.edges[i]);
 }
 
-function drawNodes(NWork) {
-	hoverNode = -1;
-    for (let i = 0; i < NWork.nodes.length; i++)
-        drawNode(NWork.nodes[i]);
-	if(grid && hoverNode == -1 && hoverX > 0 && hoverY > 0 && closeEnough){
-		ctx.strokeStyle = "#00CC00";
+function drawNodes() {
+    for (let i = 0; i < network.nodes.length; i++)
+        drawNode(network.nodes[i]);
+}
+
+function drawNetwork() {
+	ctx.strokeStyle = "#00CC00";
+	if(grid && clicked){
+		if(startX != hoverX || startY != hoverY){
+			if(closeEnough){
+				ctx.beginPath();
+				ctx.moveTo(startX * cellSize, startY * cellSize);
+				ctx.lineTo(hoverX * cellSize, hoverY * cellSize);	
+				ctx.stroke();
+			}
+			else{
+				ctx.strokeStyle = "#AAAA00";
+				ctx.beginPath();
+				ctx.moveTo(startX * cellSize, startY * cellSize);
+				ctx.lineTo(trueHoverX / scaleFactor, trueHoverY / scaleFactor);	
+				ctx.stroke();	
+			}
+		}
+	}
+	
+	ctx.strokeStyle = "black";
+    drawEdges();
+    drawNodes();
+	
+	ctx.strokeStyle = "#00CC00";
+	if(grid && hoverNode == -1 && closeEnough){
 		ctx.beginPath();
         ctx.arc(hoverX * cellSize, hoverY * cellSize, 6, 0, 2 * Math.PI);
         ctx.stroke();
 	}
-}
-
-function drawNetwork(NWork) {
-    drawEdges(NWork);
-    drawNodes(NWork);
+	if(grid && clicked && startNode == -1){
+		if(!closeEnough)
+			ctx.strokeStyle = "#AAAA00";
+		ctx.beginPath();
+        ctx.arc(startX * cellSize, startY * cellSize, 6, 0, 2 * Math.PI);
+        ctx.stroke();
+	}
 }

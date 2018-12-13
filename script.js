@@ -29,7 +29,7 @@ function cycle() {
     ctx.save();
     ctx.clearRect(0, 0, canv.width, canv.height);
     initialDraw();
-    drawNetwork(network);
+    drawNetwork();
 	ctx.restore();
     window.requestAnimationFrame(cycle);
 }

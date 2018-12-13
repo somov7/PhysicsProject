@@ -7,6 +7,9 @@ let trueHoverY;
 let closeEnough;
 let dist2;
 let closeThreshold = Math.pow(scaleFactor * cellSize * 0.4, 2);
+let startX, startY, startNode;
+let hoverEdge;
+let clicked = false;
 
 $(document).ready(function() {
 	$('#showGridCheckbox').is('checked');
@@ -14,7 +17,9 @@ $(document).ready(function() {
         grid = !grid;
     });
 	$('#canvasNetwork')
-		.mousemove( function(event){
+		.mousemove( function(event){	
+			if(!grid)
+				return;
 			let jcanv = $('#canvasNetwork');
 			canvasHover = true;
 			trueHoverX = event.pageX - jcanv.position().left - parseInt(jcanv.css('marginLeft'), 10);
@@ -22,16 +27,79 @@ $(document).ready(function() {
 			hoverX = Math.round(trueHoverX / (scaleFactor * cellSize));
 			hoverY = Math.round(trueHoverY / (scaleFactor * cellSize));
 			dist2 = Math.pow((trueHoverX - hoverX * scaleFactor * cellSize), 2) + Math.pow((trueHoverY - hoverY * scaleFactor * cellSize), 2);
-			closeEnough = dist2 < closeThreshold;
-		})
-		.click( function(){
-			if(!grid)
-				return;
-			if(hoverNode > -1){
-				network.deleteNode(hoverNode);
+			closeEnough = dist2 < closeThreshold && hoverX > 0 && hoverY > 0;			
+			hoverNode = -1;
+			if(closeEnough){
+				for(let i = 0; i < network.nodes.length; i++){
+					let node = network.nodes[i];
+					if(node.x == hoverX && node.y == hoverY){
+						hoverNode = node.id;
+						break;
+					}
+				}
 			}
-			else if(hoverX > 0 && hoverY > 0){
-				network.addNode(hoverX, hoverY);
+			if(clicked){
+				hoverEdge = -1;
+				for(let i = 0; i < network.edges.length; i++){
+					let edge = network.edges[i];
+					if((edge.startPoint.id == startNode && edge.endPoint.id == hoverNode) || 
+						(edge.startPoint.id == hoverNode && edge.endPoint.id == startNode)){
+						hoverEdge = edge.id;
+						break;
+					}
+				}
+			}
+		})
+		.mousedown( function(){
+			startX = startY = -1;
+			startNode = -1;
+			if(!grid || !closeEnough)
+				return;
+			clicked = true;
+			if(hoverNode > -1){
+				startNode = hoverNode;
+			}
+			startX = hoverX;
+			startY = hoverY;
+		})
+		.mouseup( function(){
+			if(!grid || !closeEnough || !clicked)
+				return;
+			clicked = false;
+			if(startNode > -1){
+				if(hoverNode == startNode){
+					network.deleteNode(hoverNode);
+					hoverNode = -1;
+				}
+				else if(hoverNode > -1){
+					if(hoverEdge == -1){
+						network.addEdge(startNode, hoverNode, 0);
+					}
+					else{
+						network.deleteEdge(hoverEdge);	
+					}
+				}
+				else{
+					network.addNode(hoverX, hoverY);
+					network.addEdge(startNode, network.globalNodeID - 1, 0);
+				}
+			}
+			else{
+				if(hoverNode == -1){
+					if(startX == hoverX && startY == hoverY){
+						network.addNode(startX, startY);
+						hoverNode = network.globalNodeID - 1;
+					}
+					else{
+						network.addNode(startX, startY);
+						network.addNode(hoverX, hoverY);
+						network.addEdge(network.globalNodeID - 2, network.globalNodeID - 1, 0);
+					}
+				}
+				else if(hoverNode > -1){
+					network.addNode(startX, startY);
+					network.addEdge(hoverNode, network.globalNodeID - 1, 0);
+				}
 			}
 		});
 		$("#calcButton").click( function(){
