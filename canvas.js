@@ -154,27 +154,28 @@ function drawEdge(edge) {
         ctx.stroke();
     }
 	else if(edge.type == 6){
+		let k = edge.smallerIdPlus ? -1 : 1;
         ctx.beginPath();
         ctx.rect(-4, -16, 8, 32);
         ctx.fill();
         ctx.beginPath();
-        ctx.moveTo(-4, -16);
-        ctx.lineTo(-4, +16);
+        ctx.moveTo(-4 * k, -16);
+        ctx.lineTo(-4 * k, +16);
         ctx.stroke();
 		ctx.lineWidth = 2;
 		ctx.beginPath();
-        ctx.moveTo(4, -9);
-        ctx.lineTo(4, 9);
+        ctx.moveTo(4 * k, -9);
+        ctx.lineTo(4 * k, 9);
         ctx.stroke();
 		ctx.font = "bold 18px Serif";
 		ctx.fillStyle = "black";
 		if(Math.abs(angle) > Math.PI / 2){
-			ctx.fillText("+", -12, 10);
-			ctx.fillText("-", 12, 6);
+			ctx.fillText("+", -12 * k, 10);
+			ctx.fillText("-", 12 * k, 6);
 		}
 		else{
-			ctx.fillText("+", -12, -10);
-			ctx.fillText("-", 12, -6);			
+			ctx.fillText("+", -12 * k, -10);
+			ctx.fillText("-", 12 * k, -6);			
 		}
 		ctx.fill();
 	}

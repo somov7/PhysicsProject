@@ -20,6 +20,11 @@ class Edge {
     //Switch: open
 	//Source: voltage, frequency
     constructor(id, sNode, eNode, t, param, param2) {
+		if(sNode.id > eNode.id){
+			let swap = sNode;
+			sNode = eNode;
+			eNode = swap;
+		}
 		this.id = id;
         this.startPoint = sNode;
         this.endPoint = eNode;
@@ -31,7 +36,7 @@ class Edge {
 		this.state = true;
 		this.voltage = 220;
 		this.frequency = 0;
-		this.smallerIdPlus = (sNode.id > eNode.id ? true : false);
+		this.smallerIdPlus = false;
         if(typeof param != 'undefined')
 			switch (t) {
 				case 1: //Resistor
@@ -60,9 +65,7 @@ class Edge {
 			}	
     }
 	flip(){
-		let tNode = this.startPoint;
-		this.startPoint = this.endPoint;
-		this.endPoint = tNode;
+		this.smallerIdPlus = !this.smallerIdPlus;
 	}
 }
 

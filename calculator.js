@@ -143,7 +143,7 @@ function GraphToMatrix(){
 		MatrixRow = new Array(network.edges.length).fill(0);
 		for(let j = 0; j < graph[i].length; j++){
 			let edge = graph[i][j];
-			if(edge.to > i)
+			if(i > edge.to)
 				MatrixRow[edge.id] = 1;
 			else
 				MatrixRow[edge.id] = -1;
@@ -172,7 +172,7 @@ function generateColumn(){
 			let edge = voltages[i][j];
 			if(edge.edge.type == EdgeEnum.Source){
 				let currentVoltage = edge.edge.voltage * Math.cos(edge.edge.frequency * time);
-				if(edge.edge.smallerIdPlus == edge.from < edge.to)
+				if((edge.from < edge.to) != edge.edge.smallerIdPlus)
 					Column[i] += currentVoltage;
 				else
 					Column[i] -= currentVoltage;
