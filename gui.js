@@ -63,6 +63,8 @@ $(document).ready(function() {
 			startY = hoverY;
 		})
 		.mouseup( function(){
+			if(!clicked)
+				return;
 			clicked = false;
 			if(!grid || !closeEnough)
 				return;
@@ -81,6 +83,7 @@ $(document).ready(function() {
 				}
 				else{
 					network.addNode(hoverX, hoverY);
+					hoverNode = network.globalNodeID - 1;
 					network.addEdge(startNode, network.globalNodeID - 1, 0);
 				}
 			}
