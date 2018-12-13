@@ -8,7 +8,7 @@ let closeEnough;
 let dist2;
 let closeThreshold = Math.pow(scaleFactor * cellSize * 0.4, 2);
 let startX, startY, startNode;
-let hoverEdge;
+let hoverEdge, highlightEdge;
 let clicked = false;
 
 $(document).ready(function() {
@@ -63,9 +63,9 @@ $(document).ready(function() {
 			startY = hoverY;
 		})
 		.mouseup( function(){
-			if(!grid || !closeEnough || !clicked)
-				return;
 			clicked = false;
+			if(!grid || !closeEnough)
+				return;
 			if(startNode > -1){
 				if(hoverNode == startNode){
 					network.deleteNode(hoverNode);
@@ -126,6 +126,15 @@ function createLBarElement(edge){
 	div.appendChild(text);
 	div.appendChild(document.createElement("br"));
 	let warp;
+	
+	
+	div.addEventListener('mouseover', function(){
+		highlightEdge = edge.id;
+	});
+	
+	div.addEventListener('mouseout', function(){
+		highlightEdge = -1;
+	});
 	
 	/* Type attribute */
 	

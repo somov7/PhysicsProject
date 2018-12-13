@@ -68,13 +68,16 @@ function drawEdge(edge) {
 	
 	if(edge.id == hoverEdge && clicked)
 		ctx.strokeStyle = "red";
+	
+	if(edge.id == highlightEdge){
+		ctx.lineWidth = 2;
+		//ctx.strokeStyle = "#00CC00";
+	}
 
     ctx.stroke();
+	
     let middleX = (edge.startPoint.x + edge.endPoint.x) * cellSize * 0.5;
     let middleY = (edge.startPoint.y + edge.endPoint.y) * cellSize * 0.5;
-
-    if (edge.type === 0)
-        return;
 	
     ctx.fillStyle = "white";
     ctx.save();
@@ -178,7 +181,9 @@ function drawEdge(edge) {
 	
     ctx.translate(-middleX, -middleY);
     ctx.restore();
+	ctx.lineWidth = 1;
     ctx.fillStyle = "black";
+	ctx.strokeStyle = "black";
 }
 
 function drawEdges() {
