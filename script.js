@@ -14,17 +14,6 @@ function initial(){
 		let first = document.getElementById("addNewElementFirstNode").value;
 		let second = document.getElementById("addNewElementSecondNode").value;
 		let typ = document.getElementById("addNewElementType").selectedIndex;
-		if(first == second){
-			alert("Нельзя соединить элемент с самим собой");
-			return;
-		}
-		for(let i = 0; i < network.edges.length; i++){
-			let edge = network.edges[i];
-			if((edge.startPoint.id == first && edge.endPoint.id == second) || (edge.endPoint.id == first && edge.startPoint.id == second)){
-				alert("Нельзя создать второй элемент с теми же узлами");
-				return;
-			}
-		}
 		network.addEdge(first, second, typ);
 	})
 	let drop = document.getElementById("addNewElementType");
@@ -119,5 +108,5 @@ function debug(){
 }
 
 initial();
-initSampleNetwork3();
+//initSampleNetwork3();
 cycle();

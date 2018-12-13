@@ -1,15 +1,17 @@
 let canv = document.getElementById("canvasNetwork");
 let ctx = canv.getContext("2d");
 const cellSize = 48;
+const scaleFactor = 1.5;
+let hoverNode;
 
 function initialDraw() {
 	canv.width = window.innerWidth - 300;
 	canv.height = window.innerHeight - 35;
-    ctx.scale(1.5, 1.5);
+    ctx.scale(scaleFactor, scaleFactor);
 	ctx.font = "small-caps 10px Serif";
 	ctx.textAlign = "center";
 	ctx.textBaseline= "middle";
-    if (!canvasHover)
+    if (!grid)
         return;
     ctx.strokeStyle = "gray";
     ctx.lineWidth = 0.5;
@@ -33,15 +35,20 @@ function initialDraw() {
 }
 
 function drawNode(node) {
-    if (canvasHover) {
+    if (grid) {
         ctx.fillStyle = "white";
         ctx.beginPath();
         ctx.arc(node.x * cellSize, node.y * cellSize, 6, 0, 2 * Math.PI);
         ctx.fill();
+        ctx.fillStyle = "black";
+		if(hoverX == node.x && hoverY == node.y && closeEnough){
+			ctx.strokeStyle = ctx.fillStyle = "red";
+			hoverNode = node.id;
+		}
+		else
+			ctx.strokeStyle = ctx.fillStyle = "black";
         ctx.stroke();
-		ctx.fillStyle = "black";
 		ctx.fillText("" + node.id, node.x * cellSize, node.y * cellSize);
-		//ctx.strokeText("" + node.id, node.x * cellSize, node.y * cellSize);
     }
     else {
         ctx.beginPath();
@@ -118,7 +125,7 @@ function drawEdge(edge) {
         ctx.beginPath();
         ctx.arc(0, 0, 10, 0, 2 * Math.PI);
 		let color;
-		if(typeof idToEdge == 'undefined' || typeof idToEdge.get(edge.id) == 'undefined')
+		if(typeof idToEdge == 'undefined' || typeof idToEdge.get(edge.id) == 'undefined' || typeof Currency == 'undefined' || typeof Currency[idToEdge.get(edge.id)] == 'undefined')
 			color = 255;
 		else
 			color = scale(Math.pow(Currency[idToEdge.get(edge.id)], 2) * edge.resistance, 0, edge.power, 255, 0);
@@ -171,8 +178,15 @@ function drawEdges(NWork) {
 }
 
 function drawNodes(NWork) {
+	hoverNode = -1;
     for (let i = 0; i < NWork.nodes.length; i++)
         drawNode(NWork.nodes[i]);
+	if(grid && hoverNode == -1 && hoverX > 0 && hoverY > 0 && closeEnough){
+		ctx.strokeStyle = "#00CC00";
+		ctx.beginPath();
+        ctx.arc(hoverX * cellSize, hoverY * cellSize, 6, 0, 2 * Math.PI);
+        ctx.stroke();
+	}
 }
 
 function drawNetwork(NWork) {

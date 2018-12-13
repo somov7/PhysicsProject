@@ -81,6 +81,17 @@ class Network {
     }
 
     addEdge(sNodeId, eNodeId, t, param, param2) {
+		if(sNodeId == eNodeId){
+			alert("Нельзя соединить элемент с самим собой");
+			return;
+		}
+		for(let i = 0; i < network.edges.length; i++){
+			let edge = network.edges[i];
+			if((edge.startPoint.id == sNodeId && edge.endPoint.id == eNodeId) || (edge.endPoint.id == eNodeId && edge.startPoint.id == sNodeId)){
+				alert("Нельзя создать второй элемент с теми же узлами");
+				return;
+			}
+		}
 		let sNode, eNode, node;
 		for(let i = 0; i < this.nodes.length; i++){
 			if(this.nodes[i].id == sNodeId)
@@ -103,6 +114,7 @@ class Network {
 	}
 	
 	deleteNode(id){
+		
 		for(let i = 0; i < this.edges.length; i++){
 			if(this.edges[i].startPoint.id == id || this.edges[i].endPoint.id == id){
 				this.deleteEdge(this.edges[i].id);
@@ -113,8 +125,11 @@ class Network {
 		for(let i = 0; i < this.nodes.length; i++){
 			if(this.nodes[i].id == id){
 				this.nodes.splice(i, 1);
-				return;
+				break;
 			}
 		}
+		
+		updateDeleteElementDroplists(id);
+		
 	}
 }

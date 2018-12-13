@@ -7,6 +7,7 @@ let tree;
 let log = true;
 let time;
 let freqs;
+let errNetwork;
 	
 class CalcEdge{
 	// edge, from, to, id
@@ -22,6 +23,8 @@ function NetworkToGraph(NWork){
 	idToVertex.clear();
 	graph = [];
 	freqs = 0;
+	if(network.nodes.length == 0)
+		return;
 	for(let i = 0; i < NWork.nodes.length; i++)
 		idToVertex.set(NWork.nodes[i].id, i);
 	graph.length = idToVertex.size;
@@ -60,6 +63,15 @@ function dfs(v){
 			visedge[edge.id] = true;
 			dfs(edge.to);
 		}
+	}
+}
+
+function dfsCheck(v){
+	vis[v] = true;
+	for(let i = 0; i < graph[v].length; i++){
+		edge = graph[v][i];
+		if(!vis[edge.to])
+			dfsCheck(edge.to);
 	}
 }
 
@@ -174,11 +186,33 @@ function accumulate(){
 		accumulator[i] += Currency[i] * Currency[i] * deltaTime;
 }
 
+function checkGraph(){
+	if(graph.length == 0){
+		errNetwork = "Ошибка - нет электрической цепи";
+		return false;
+	}
+	vis = new Array(graph.length).fill(false);
+	dfsCheck(0);
+	for(let i = 0; i < vis.length; i++)
+		if(!vis[i]){
+			errNetwork = "Ошибка - электрическая цепь разъединена";
+			return false;
+		}
+	return true;
+}
+
 function calculate(){
 	time = 0;
 	let limit;
+	errNetwork = "";
 	NetworkToGraph(network);
+	if(!checkGraph())
+		return;
 	GraphToMatrix();
+	if(Matrix.length == 0){
+		errNetwork = "Ошибка - нет электрической цепи";
+		return;
+	}
 	accumulator = new Array(Matrix.length).fill(0);
 	if(freqs == 0)
 		limit = deltaTime = 1;
@@ -188,7 +222,13 @@ function calculate(){
 	}
 	while(time < limit){
 		generateColumn();
-		Currency = math.lusolve(Matrix, Column);
+		try{
+			Currency = math.lusolve(Matrix, Column);
+		}
+		catch (err){
+			errNetwork = "Ошибка - в цепи возник бесконечный ток";
+			return; 
+		}
 		accumulate();
 		time += deltaTime;
 	}

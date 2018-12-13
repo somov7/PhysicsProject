@@ -1,19 +1,52 @@
-let canvasHover = true;
+let grid = true;
+let canvasHover;
+let hoverX;
+let hoverY;
+let trueHoverX;
+let trueHoverY;
+let closeEnough;
+let dist2;
+let closeThreshold = Math.pow(scaleFactor * cellSize * 0.4, 2);
 
 $(document).ready(function() {
 	$('#showGridCheckbox').is('checked');
 	$('#showGridCheckbox').change(function() {
-        canvasHover = !canvasHover;
+        grid = !grid;
     });
-});
-$("#calcButton").click(function(){
-	calculate();
-	let message = "";
-	for(let i = 0; i < network.edges.length; i++){
-		edge = network.edges[i];
-		message += edge.startPoint.id + "<->" + edge.endPoint.id + ": " + math.round(accumulator[idToEdge.get(edge.id)], 5) + "\n";
-	}
-	alert(message);
+	$('#canvasNetwork')
+		.mousemove( function(event){
+			let jcanv = $('#canvasNetwork');
+			canvasHover = true;
+			trueHoverX = event.pageX - jcanv.position().left - parseInt(jcanv.css('marginLeft'), 10);
+			trueHoverY = event.pageY - jcanv.position().top - parseInt(jcanv.css('marginTop'), 10);
+			hoverX = Math.round(trueHoverX / (scaleFactor * cellSize));
+			hoverY = Math.round(trueHoverY / (scaleFactor * cellSize));
+			dist2 = Math.pow((trueHoverX - hoverX * scaleFactor * cellSize), 2) + Math.pow((trueHoverY - hoverY * scaleFactor * cellSize), 2);
+			closeEnough = dist2 < closeThreshold;
+		})
+		.click( function(){
+			if(!grid)
+				return;
+			if(hoverNode > -1){
+				network.deleteNode(hoverNode);
+			}
+			else if(hoverX > 0 && hoverY > 0){
+				network.addNode(hoverX, hoverY);
+			}
+		});
+		$("#calcButton").click( function(){
+			calculate();
+			if(errNetwork != ""){
+				alert(errNetwork);
+				return;
+			}
+			let message = "";
+			for(let i = 0; i < network.edges.length; i++){
+				edge = network.edges[i];
+				message += edge.startPoint.id + "<->" + edge.endPoint.id + ": " + math.round(accumulator[idToEdge.get(edge.id)], 5) + "\n";
+			}
+			alert(message);
+		});
 });
 
 function createLBarElement(edge){
@@ -320,4 +353,16 @@ function updateAddNewElementDroplists(id){
 	opt = document.createElement("option");
 	opt.innerHTML = id;
 	second.appendChild(opt);	
+}
+
+function updateDeleteElementDroplists(id){
+	$('#addNewElementFirstNode option').each(function () {
+		if($(this).html() == id)
+			this.remove();
+	});
+	$('#addNewElementSecondNode option').each(function () {
+		if($(this).html() == id)
+			this.remove();
+	});
+	
 }
