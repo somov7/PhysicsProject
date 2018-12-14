@@ -2,8 +2,14 @@ body {
     font: normal 12px Verdana, Arial, sans-serif;
 }
 
-#leftBar {
+#leftBar{
     float: left;
+    width: 250px;
+    height: 100hv;
+}
+
+#rightBar{
+	float: right;
     width: 250px;
     height: 100hv;
 }
@@ -36,11 +42,11 @@ body {
 }
 
 #showGrid{
-	position: relative;
+	position: absolute;
 	float: right;
-	z-index: 1;
+	z-index: 10;
 	bottom: 30px;
-	right: 30px;
+	right: 280px;
 	background-color: white;
 	font-variant: small-caps;
 	font-size: 15px;

@@ -5,7 +5,7 @@ const scaleFactor = 1.5;
 let hoverNode;
 
 function initialDraw() {
-	canv.width = window.innerWidth - 300;
+	canv.width = window.innerWidth - 540;
 	canv.height = window.innerHeight - 35;
     ctx.scale(scaleFactor, scaleFactor);
 	ctx.font = "small-caps 10px Serif";
@@ -137,7 +137,7 @@ function drawEdge(edge) {
         ctx.beginPath();
         ctx.arc(0, 0, 10, 0, 2 * Math.PI);
 		let color;
-		if(typeof idToEdge == 'undefined' || typeof idToEdge.get(edge.id) == 'undefined' || typeof Currency == 'undefined' || typeof Currency[idToEdge.get(edge.id)] == 'undefined')
+		if(!actual || typeof idToEdge == 'undefined' || typeof idToEdge.get(edge.id) == 'undefined' || typeof Currency == 'undefined' || typeof Currency[idToEdge.get(edge.id)] == 'undefined')
 			color = 255;
 		else
 			color = scale(Math.pow(Currency[idToEdge.get(edge.id)], 2) * edge.resistance, 0, edge.power, 255, 0);

@@ -8,6 +8,7 @@ let log = true;
 let time;
 let freqs;
 let errNetwork;
+let actual = false;
 	
 class CalcEdge{
 	// edge, from, to, id
@@ -171,6 +172,7 @@ function generateColumn(){
 		for(let j = 0; j < voltages[i].length; j++){
 			let edge = voltages[i][j];
 			if(edge.edge.type == EdgeEnum.Source){
+				console.log(edge);
 				let currentVoltage = edge.edge.voltage * Math.cos(edge.edge.frequency * time);
 				if((edge.from < edge.to) != edge.edge.smallerIdPlus)
 					Column[i] += currentVoltage;
@@ -234,4 +236,5 @@ function calculate(){
 	}
 	for(let i = 0; i < accumulator.length; i++)
 		accumulator[i] = Math.sqrt(accumulator[i] / limit);
+	actual = true;
 }

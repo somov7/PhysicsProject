@@ -19,7 +19,7 @@ class Edge {
 	//Lamp: resistance, power
     //Switch: open
 	//Source: voltage, frequency
-    constructor(id, sNode, eNode, t, param, param2) {
+    constructor(id, sNode, eNode, t, param, param2, param3) {
 		if(sNode.id > eNode.id){
 			let swap = sNode;
 			sNode = eNode;
@@ -63,6 +63,11 @@ class Edge {
 				case 6: // Source
 					this.frequency = param2;
 			}	
+		if(typeof param3 != 'undefined')
+			switch (t) {
+				case 6: // Source
+					this.smallerIdPlus = param3;
+			}
     }
 	flip(){
 		this.smallerIdPlus = !this.smallerIdPlus;
@@ -81,9 +86,11 @@ class Network {
         this.nodes.push(new Node(this.globalNodeID, _x, _y));
 		updateAddNewElementDroplists(this.globalNodeID);
 		this.globalNodeID++;
+		
+		actual = false;
     }
 
-    addEdge(sNodeId, eNodeId, t, param, param2) {
+    addEdge(sNodeId, eNodeId, t, param, param2, param3) {
 		if(sNodeId == eNodeId){
 			alert("Нельзя соединить элемент с самим собой");
 			return;
@@ -102,9 +109,11 @@ class Network {
 			if(this.nodes[i].id == eNodeId)
 				eNode = this.nodes[i];
 		}
-        let addedEdge = new Edge(this.globalEdgeID++, sNode, eNode, t, param, param2);
+        let addedEdge = new Edge(this.globalEdgeID++, sNode, eNode, t, param, param2, param3);
 		this.edges.push(addedEdge);
 		createLBarElement(addedEdge);
+		
+		actual = false;
 	}
 	
 	deleteEdge(id){
@@ -114,6 +123,7 @@ class Network {
 				deleteElementFromLBar(id);					
 				return;
 			}
+		actual = false;
 	}
 	
 	deleteNode(id){
@@ -133,6 +143,7 @@ class Network {
 		}
 		
 		updateDeleteElementDroplists(id);
+		actual = false;
 		
 	}
 }

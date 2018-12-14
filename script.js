@@ -99,14 +99,32 @@ function initSampleNetwork3() {
 	
 }
 
+function initSampleNetwork4(){
+	
+	network.addNode(1, 1);
+    network.addNode(3, 1);
+    network.addNode(5, 1);
+    network.addNode(5, 3);
+    network.addNode(5, 5);
+    network.addNode(1, 5);
+    network.addNode(3, 3);
+	
+	network.addEdge(0, 1, 6, 1, 0, true);
+	network.addEdge(5, 6, 6, 2, 0, true);
+	network.addEdge(3, 4, 6, 3);
+	network.addEdge(1, 2, 1, 1);
+	network.addEdge(2, 6, 1, 0.5);
+	network.addEdge(2, 3, 1, 1.0/3);
+	network.addEdge(0, 5, 1, 1.0);
+	network.addEdge(4, 5, 1, 1.0/3);
+	
+}
+
 function debug(){
-	for(let i = 0; i < Matrix.length; i++){
-		console.log("Vertex " + i + " : ");
-		console.log(Matrix[i]);
-	}
-	console.log(Column);
+	let watch = new Watcher(0, 1);
+	console.log(watch.get());
 }
 
 initial();
-//initSampleNetwork3();
+initSampleNetwork4();
 cycle();

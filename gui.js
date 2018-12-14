@@ -114,7 +114,7 @@ $(document).ready(function() {
 			let message = "";
 			for(let i = 0; i < network.edges.length; i++){
 				edge = network.edges[i];
-				message += edge.startPoint.id + "<->" + edge.endPoint.id + ": " + math.round(accumulator[idToEdge.get(edge.id)], 5) + "\n";
+				message += edge.startPoint.id + "<->" + edge.endPoint.id + ": " + math.round(accumulator[idToEdge.get(edge.id)], 5) + " А\n";
 			}
 			alert(message);
 		});
@@ -383,6 +383,7 @@ function updateElementFromLBar(edge){
 	edge.power = parseFloat(t);
 	t = document.getElementById("state" + edge.id).checked;
 	edge.state = t;
+	actual = false;
 }
 
 function updateLBarElement(id, index){
