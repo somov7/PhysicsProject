@@ -101,13 +101,13 @@ function initSampleNetwork3() {
 
 function initSampleNetwork4(){
 	
-	network.addNode(1, 1);
-    network.addNode(3, 1);
-    network.addNode(5, 1);
-    network.addNode(5, 3);
-    network.addNode(5, 5);
-    network.addNode(1, 5);
-    network.addNode(3, 3);
+	network.addNode(-2, -2);
+    network.addNode(0, -2);
+    network.addNode(2, -2);
+    network.addNode(2, 0);
+    network.addNode(2, 2);
+    network.addNode(-2, 2);
+    network.addNode(0, 0);
 	
 	network.addEdge(0, 1, 6, 1, 0, true);
 	network.addEdge(5, 6, 6, 2, 0, true);

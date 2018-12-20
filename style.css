@@ -41,19 +41,31 @@ body {
 	height: 60px;
 }
 
-#showGrid{
+#canvasOptions, #coordinates{
 	position: absolute;
-	float: right;
 	z-index: 10;
+	padding: 10px;
 	bottom: 30px;
-	right: 280px;
-	background-color: white;
+	background-color: rgba(255, 255, 255, 0.5);
 	font-variant: small-caps;
 	font-size: 15px;
 	-webkit-user-select: none; /* Safari */        
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+/Edge */
 	user-select: none; /* Standard */
+}
+
+#canvasOptions{
+	right: 280px;
+}
+
+#coordinates{	
+	left: 280px;
+}
+
+#scaleValue{
+	font-variant: small-caps;
+	font-size: 15px;
 }
 
 #showGridCheckbox{

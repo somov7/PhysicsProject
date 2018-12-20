@@ -30,9 +30,15 @@
 </div>
 
 <div>
-<canvas id="canvasNetwork"></canvas>
-<label id="showGrid"><input type="checkbox" autocomplete="off" id="showGridCheckbox" checked>режим редактирования</label>
-
+	<canvas id="canvasNetwork"></canvas>
+	<div id="canvasOptions">
+		<label><span>масштаб</span></span><br><input type="range" id="scaleSlider"></label>
+		<br>
+		<label for="showGridCheckbox"><input type="checkbox" autocomplete="off" id="showGridCheckbox" checked>режим редактирования</label>
+	</div>
+	<div id="coordinates">
+		x: 0 y: 0
+	</div>
 </div>
 
 <div id="rightBar">

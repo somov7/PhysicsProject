@@ -16,18 +16,43 @@ $(document).ready(function() {
 	$('#showGridCheckbox').change(function() {
         grid = !grid;
     });
+	$(document).keypress( function(event){
+		switch(event.keyCode){
+			case 37:
+				transX -= cellSize;
+				break;
+			case 38:
+				transY -= cellSize;
+				break;
+			case 39:
+				transX += cellSize;
+				break;
+			case 40:
+				transY += cellSize;
+				break;
+			case 45:
+				scaleFactor -= 0.1;
+				break;
+			case 43:
+				scaleFactor += 0.1;
+				break;
+			default:
+				break;
+		}
+		updateCoordinates();
+	});
 	$('#canvasNetwork')
 		.mousemove( function(event){	
 			if(!grid)
 				return;
 			let jcanv = $('#canvasNetwork');
 			canvasHover = true;
-			trueHoverX = event.pageX - jcanv.position().left - parseInt(jcanv.css('marginLeft'), 10);
-			trueHoverY = event.pageY - jcanv.position().top - parseInt(jcanv.css('marginTop'), 10);
+			trueHoverX = event.pageX - jcanv.position().left - parseInt(jcanv.css('marginLeft'), 10) - transX * scaleFactor - canv.width * 0.5;
+			trueHoverY = event.pageY - jcanv.position().top - parseInt(jcanv.css('marginTop'), 10) - transY * scaleFactor - canv.height * 0.5;
 			hoverX = Math.round(trueHoverX / (scaleFactor * cellSize));
 			hoverY = Math.round(trueHoverY / (scaleFactor * cellSize));
 			dist2 = Math.pow((trueHoverX - hoverX * scaleFactor * cellSize), 2) + Math.pow((trueHoverY - hoverY * scaleFactor * cellSize), 2);
-			closeEnough = dist2 < closeThreshold && hoverX > 0 && hoverY > 0;			
+			closeEnough = dist2 < closeThreshold;			
 			hoverNode = -1;
 			if(closeEnough){
 				for(let i = 0; i < network.nodes.length; i++){
@@ -51,7 +76,7 @@ $(document).ready(function() {
 			}
 		})
 		.mousedown( function(){
-			startX = startY = -1;
+			startX = startY = null;
 			startNode = -1;
 			if(!grid || !closeEnough)
 				return;
@@ -97,6 +122,7 @@ $(document).ready(function() {
 						network.addNode(startX, startY);
 						network.addNode(hoverX, hoverY);
 						network.addEdge(network.globalNodeID - 2, network.globalNodeID - 1, 0);
+						hoverNode = network.globalNodeID - 1;						
 					}
 				}
 				else if(hoverNode > -1){
@@ -104,21 +130,44 @@ $(document).ready(function() {
 					network.addEdge(hoverNode, network.globalNodeID - 1, 0);
 				}
 			}
+		})
+	$("#calcButton").click( function(){
+		calculate();
+		if(errNetwork != ""){
+			alert(errNetwork);
+			return;
+		}
+		let message = "";
+		for(let i = 0; i < network.edges.length; i++){
+			edge = network.edges[i];
+			message += edge.startPoint.id + "<->" + edge.endPoint.id + ": " + math.round(accumulator[idToEdge.get(edge.id)], 5) + " А\n";
+		}
+		alert(message);
+	});
+	$('#scaleSlider').attr({
+		"min": 0.50,
+		"max": 3.50,
+		"value": 1.50,
+		"step": 0.01,
+		"autocomplete": 'off'
+		})
+		.mouseout(function(){
+			$(this).blur(); 
 		});
-		$("#calcButton").click( function(){
-			calculate();
-			if(errNetwork != ""){
-				alert(errNetwork);
-				return;
-			}
-			let message = "";
-			for(let i = 0; i < network.edges.length; i++){
-				edge = network.edges[i];
-				message += edge.startPoint.id + "<->" + edge.endPoint.id + ": " + math.round(accumulator[idToEdge.get(edge.id)], 5) + " А\n";
-			}
-			alert(message);
-		});
+	$(document).on('input', '#scaleSlider', function() {
+		scaleFactor = $(this).val();
+		$('#scaleValue').html($(this).val());
+	});
+	$('#coordinates').click(function(){
+		transX = 0;
+		transY = 0;
+		updateCoordinates();
+	});
 });
+
+function updateCoordinates(){
+	$('#coordinates').html("x: " + transX / cellSize + " y: " + transY / cellSize);
+}
 
 function createLBarElement(edge){
 	let div = document.createElement("div");

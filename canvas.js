@@ -1,13 +1,16 @@
 let canv = document.getElementById("canvasNetwork");
 let ctx = canv.getContext("2d");
 const cellSize = 48;
-const scaleFactor = 1.5;
+let scaleFactor = 1.5;
 let hoverNode;
+let transX = 0, transY = 0;
 
 function initialDraw() {
 	canv.width = window.innerWidth - 540;
-	canv.height = window.innerHeight - 35;
-    ctx.scale(scaleFactor, scaleFactor);
+	canv.height = window.innerHeight - 35;	
+    ctx.translate(canv.width * 0.5, canv.height * 0.5);
+	ctx.scale(scaleFactor, scaleFactor);
+    ctx.translate(transX, transY);
 	ctx.font = "small-caps 10px Serif";
 	ctx.textAlign = "center";
 	ctx.textBaseline= "middle";
@@ -15,20 +18,37 @@ function initialDraw() {
         return;
     ctx.strokeStyle = "gray";
     ctx.lineWidth = 0.5;
-    ctx.lineDashOffset = 4;
-    ctx.setLineDash([8, 8]);
-    for (let i = 0; i <= canv.height; i += cellSize) {
+    let brl = -(canv.width) / scaleFactor - transX;
+	let brr = (canv.width) / scaleFactor - transX;
+	let brt = -(canv.height) / scaleFactor - transY;
+	let brb = (canv.height) / scaleFactor - transY;
+	let cx = -transX;
+	let cy = -transY;
+    ctx.setLineDash([2, 2]);
+	for (let i = cy; i <= brb; i += cellSize) {
         ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.lineTo(canv.width, i);
+        ctx.moveTo(brl, i);
+        ctx.lineTo(brr, i);
         ctx.stroke();
     }
-    for (let i = 0; i <= canv.width; i += cellSize) {
+	for (let i = cy; i >= brt; i -= cellSize) {
         ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, canv.height);
+        ctx.moveTo(brl, i);
+        ctx.lineTo(brr, i);
         ctx.stroke();
     }
+	for (let i = cx; i <= brr; i += cellSize) {
+        ctx.beginPath();
+        ctx.moveTo(i, brt);
+        ctx.lineTo(i, brb);
+        ctx.stroke();
+	}
+	for (let i = cx; i >= brl; i -= cellSize) {
+        ctx.beginPath();
+        ctx.moveTo(i, brt);
+        ctx.lineTo(i, brb);
+        ctx.stroke();
+	}
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
     ctx.setLineDash([]);
