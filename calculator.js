@@ -1,15 +1,18 @@
 let idToVertex = new Map();
 let idToEdge = new Map();
 let graph;
-let Currency;
-let accumulator;
+let Current;
+let prevCurrent;
+let Voltage;
+let voltages;
 let tree;
 let log = true;
-let time;
-let freqs;
+let time, deltaTime;
+let dynamic;
 let errNetwork;
-let actual = false;
-	
+let limit;
+let allEdges;
+
 class CalcEdge{
 	// edge, from, to, id
 	constructor(edge, from, to, id){
@@ -17,12 +20,15 @@ class CalcEdge{
 		this.from = from;
 		this.to = to;
 		this.id = id;
+		this.voltage = 0; // capacitor only, for calc purposes
+		this.lastCurrent = 0;
 	}
 }
 	
 function NetworkToGraph(){
 	idToVertex.clear();
 	graph = [];
+	allEdges = [];
 	freqs = 0;
 	if(network.nodes.length == 0)
 		return;
@@ -32,27 +38,25 @@ function NetworkToGraph(){
 	for(let i = 0; i < graph.length; i++)
 		graph[i] = [];
 	voltages = new Array(network.edges.length);
+	dynamic = false;
 	for(let i = 0; i < network.edges.length; i++){
 		edge = network.edges[i];
 		voltages[i] = [];
 		idToEdge.set(edge.id, i);
-		if(edge.type == EdgeEnum.Source && edge.frequency > 0){
-			if(freqs == 0)
-				freqs = edge.frequency;
-			else
-				freqs = math.gcd(freqs, edge.frequency);
+		if((edge.type == EdgeEnum.Source && edge.frequency > 0) || edge.type == EdgeEnum.Coil || edge.type == EdgeEnum.Condensator){
+			dynamic = true;
 		}
 		let s = idToVertex.get(edge.startPoint.id);
 		let t = idToVertex.get(edge.endPoint.id);
 		graph[s].push(new CalcEdge(edge, s, t, i));
 		graph[t].push(new CalcEdge(edge, t, s, i));
+		allEdges.push(new CalcEdge(edge, s, t, i));
 	}
 }
 
 let vis;
 let visedge;
 let nonTree;
-let voltages;
 	
 function dfs(v){
 	vis[v] = true;
@@ -122,6 +126,27 @@ function dfs2(v, t){
 				else
 					MatrixRow[edge.id] = 0;
 			}
+			else if(edge.edge.type == EdgeEnum.Coil){
+				if(edge.from < edge.to){
+					MatrixRow[edge.id] = -edge.edge.inductance * 1e-6 / deltaTime;
+					voltages[Matrix.length].push(edge);
+				}
+				else{
+					MatrixRow[edge.id] = edge.edge.inductance * 1e-6 / deltaTime;
+					voltages[Matrix.length].push(edge);
+				}
+			}
+			else if(edge.edge.type == EdgeEnum.Condensator){
+				if(edge.from < edge.to){
+					MatrixRow[edge.id] = -1e9 * 0.5 * deltaTime / edge.edge.capacity;
+					voltages[Matrix.length].push(edge);
+				}
+				else{
+					MatrixRow[edge.id] = 1e9 * 0.5 * deltaTime / edge.edge.capacity;
+					voltages[Matrix.length].push(edge);
+				}
+				
+			}
 		}
 		flag = true;
 	}
@@ -160,7 +185,6 @@ function GraphToMatrix(){
 		flag = false;
 		edge = nonTree[i];
 		Cycle.push(edge);
-		//console.log(edge);
 		dfs2(edge.to, edge.from);
 		Matrix.push(MatrixRow);
 	}
@@ -172,20 +196,57 @@ function generateColumn(){
 		for(let j = 0; j < voltages[i].length; j++){
 			let edge = voltages[i][j];
 			if(edge.edge.type == EdgeEnum.Source){
-				console.log(edge);
-				let currentVoltage = edge.edge.voltage * Math.cos(edge.edge.frequency * time);
-				if((edge.from < edge.to) != edge.edge.smallerIdPlus)
-					Column[i] += currentVoltage;
+				let curVoltage = edge.edge.voltage * Math.cos(edge.edge.frequency * time);
+				if((edge.from < edge.to) == edge.edge.smallerIdPlus)
+					 curVoltage *= -1;
+				Column[i] += curVoltage;
+			}
+			else if(edge.edge.type == EdgeEnum.Coil){
+				if(edge.from < edge.to)
+					Column[i] -= edge.edge.inductance * 1e-6 * Current[edge.id] / deltaTime;
 				else
-					Column[i] -= currentVoltage;
+					Column[i] += edge.edge.inductance * 1e-6 * Current[edge.id] / deltaTime;
+			}
+			else if(edge.edge.type == EdgeEnum.Condensator){
+				if(edge.from < edge.to)
+					edge.voltage += Current[edge.id] * deltaTime * 1e9 * 0.5 / edge.edge.capacity;
+				else
+					edge.voltage -=	Current[edge.id] * deltaTime * 1e9 * 0.5 / edge.edge.capacity;		
+				Column[i] = edge.voltage;
 			}
 		}
 	}
 }
 
-function accumulate(){
-	for(let i = 0; i < Currency.length; i++)
-		accumulator[i] += Currency[i] * Currency[i] * deltaTime;
+function updateVoltages(){
+	for(let i = 0; i < allEdges.length; i++){
+		let edge = allEdges[i];
+		if(edge.edge.type == EdgeEnum.Source){
+			if((edge.from < edge.to) != edge.edge.smallerIdPlus)
+				Voltage[i] = edge.edge.voltage * Math.cos(edge.edge.frequency * time);
+			else
+				Voltage[i] = -edge.edge.voltage * Math.cos(edge.edge.frequency * time);
+		}
+		else if(edge.edge.type == EdgeEnum.Resistor || edge.edge.type == EdgeEnum.Lamp){
+			if(edge.from < edge.to)
+				Voltage[i] = -Current[i] * edge.edge.resistance;
+			else
+				Voltage[i] = Current[i] * edge.edge.resistance;
+		}
+		else if(edge.edge.type == EdgeEnum.Condensator){
+			if(edge.from < edge.to)
+				Voltage[i] -= (Current[i] + prevCurrent[i]) * deltaTime * 1e9 * -0.5 / edge.edge.capacity;
+			else 
+				Voltage[i] += (Current[i] + prevCurrent[i]) * deltaTime * 1e9 * -0.5 / edge.edge.capacity;
+			console.log(prevCurrent[i]);
+		}
+		else if(edge.edge.type == EdgeEnum.Coil){
+			if(edge.from < edge.to)
+				Voltage[i] = -edge.edge.inductance * 1e-6 * (Current[i] - prevCurrent[i]) / deltaTime;
+			else
+				Voltage[i] = edge.edge.inductance * 1e-6 * (Current[i] - prevCurrent[i]) / deltaTime;
+		}	
+	}
 }
 
 function checkGraph(){
@@ -205,36 +266,40 @@ function checkGraph(){
 
 function calculate(){
 	time = 0;
-	let limit;
 	errNetwork = "";
 	NetworkToGraph();
 	if(!checkGraph())
 		return;
 	GraphToMatrix();
+	Current = new Array(graph.length).fill(0);
+	prevCurrent = new Array(graph.length).fill(0);
+	Voltage = new Array(graph.length).fill(0);
 	if(Matrix.length == 0){
 		errNetwork = "Ошибка - нет электрической цепи";
 		return;
 	}
-	accumulator = new Array(Matrix.length).fill(0);
-	if(freqs == 0)
+	if(!dynamic)
 		limit = deltaTime = 1;
 	else{
-		limit = Math.PI * 2 / freqs;
-		deltaTime = 0.0001 * limit;
+		limit = Math.PI * 8;
+		deltaTime = 0.00001 * limit;
 	}
+	watches.forEach(initWatch);
 	while(time < limit){
 		generateColumn();
+		prevCurrent = Current.slice(0);
 		try{
-			Currency = math.lusolve(Matrix, Column);
+			Current = math.lusolve(Matrix, Column);
 		}
 		catch (err){
 			errNetwork = "Ошибка - в цепи возник бесконечный ток";
 			return; 
 		}
-		accumulate();
+		updateVoltages();
+		watches.forEach(updateWatch);
 		time += deltaTime;
 	}
-	for(let i = 0; i < accumulator.length; i++)
-		accumulator[i] = Math.sqrt(accumulator[i] / limit);
-	actual = true;
+	watchesActual(true);
+	watches.forEach(finalWatch);
+	watches.forEach(updateGUI);
 }

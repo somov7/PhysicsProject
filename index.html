@@ -3,14 +3,17 @@
 <head>
     <meta charset="utf-8">
     <title>Калькулятор электрических цепей</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="icon" href="https://pp.userapi.com/c841435/v841435765/26444/fo2kPBvJkc4.jpg">
+	<link rel="stylesheet" href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+      
 </head>
 
 <body>
 
 <div id="leftBar">
     <div id="edgeSettings">
+		<span class="header">Элементы цепи</span>
 		<div id="addNewElement">
 			Узлы:
 			<br>
@@ -21,9 +24,10 @@
 			<select id="addNewElementSecondNode">
 			</select>
 			<br>
-			<select id="addNewElementType">
+			<select style="margin-top: 5px" id="addNewElementType">
 			</select>
 			<input type="button" id="addNewElementButton" value="Добавить" style="position:absolute; top:10px; right:10px">
+			<input type="button" id="resetButton" value="Очистить" style="position:absolute; top:40px; right:10px">
 		</div>
     </div>
 	<input type="button" value="Рассчитать" id="calcButton">
@@ -32,7 +36,7 @@
 <div>
 	<canvas id="canvasNetwork"></canvas>
 	<div id="canvasOptions">
-		<label><span>масштаб</span></span><br><input type="range" id="scaleSlider"></label>
+		<label><span>масштаб</span></span><br><input type="range" autocomplete="off" id="scaleSlider"></label>
 		<br>
 		<label for="showGridCheckbox"><input type="checkbox" autocomplete="off" id="showGridCheckbox" checked>режим редактирования</label>
 	</div>
@@ -41,9 +45,32 @@
 	</div>
 </div>
 
+<div id="progress">
+	<div id="progressBar">идёт расчёт электрической цепи...</div>
+</div>
+
 <div id="rightBar">
+    <div id="watchSettings">
+		<span class="header">Показания</span>
+		<div id="addNewWatch">
+			Участок:
+			<select id="addNewWatchSelectEdge">
+			</select>
+			<br>
+			<select style="margin-top: 5px" id="addNewWatchSelectType">
+				<option value="WatchCurrentRMS">Эффективный ток</option>
+				<option value="WatchVoltageRMS">Эффективное напряжение</option>
+				<option value="WatchCurrentGraph">График тока</option>
+				<option value="WatchVoltageGraph">График напряжения</option>
+			</select>
+			<input type="button" id="addNewWatchButton" value="Добавить" style="position:absolute; top:10px; right:10px">
+		</div>	
+	</div>
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script language="JavaScript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.2.1/math.js"></script>
 <script src="watcher.js"></script>
 <script src="network.js"></script>

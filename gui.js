@@ -19,16 +19,16 @@ $(document).ready(function() {
 	$(document).keypress( function(event){
 		switch(event.keyCode){
 			case 37:
-				transX -= cellSize;
-				break;
-			case 38:
-				transY -= cellSize;
-				break;
-			case 39:
 				transX += cellSize;
 				break;
-			case 40:
+			case 38:
 				transY += cellSize;
+				break;
+			case 39:
+				transX -= cellSize;
+				break;
+			case 40:
+				transY -= cellSize;
 				break;
 			case 45:
 				scaleFactor -= 0.1;
@@ -132,22 +132,12 @@ $(document).ready(function() {
 			}
 		})
 	$("#calcButton").click( function(){
-		calculate();
-		if(errNetwork != ""){
-			alert(errNetwork);
-			return;
-		}
-		let message = "";
-		for(let i = 0; i < network.edges.length; i++){
-			edge = network.edges[i];
-			message += edge.startPoint.id + "<->" + edge.endPoint.id + ": " + math.round(accumulator[idToEdge.get(edge.id)], 5) + " А\n";
-		}
-		alert(message);
+		ready = 1;
 	});
 	$('#scaleSlider').attr({
 		"min": 0.50,
 		"max": 3.50,
-		"value": 1.50,
+		"value": 2.50,
 		"step": 0.01,
 		"autocomplete": 'off'
 		})
@@ -158,10 +148,81 @@ $(document).ready(function() {
 		scaleFactor = $(this).val();
 		$('#scaleValue').html($(this).val());
 	});
-	$('#coordinates').click(function(){
+	$('#coordinates').click( function(){
 		transX = 0;
 		transY = 0;
 		updateCoordinates();
+	});
+	$("#addNewWatchButton").click( function(){
+		let watchType = $('#addNewWatchSelectType').children("option:selected").val();
+		let id = $('#addNewWatchSelectEdge').children("option:selected");
+		if(id.length == 0)
+			return;
+		let addedWatch;
+		let divInfo;
+		let div = $('<div>').attr('id', 'watch' + GlobalWatchID).addClass(id.val()).addClass('barDiv');
+		div.appendTo('#watchSettings');	
+		$('<button/>').html("X").addClass("buttonBar").click(function(){
+			deleteWatch(div.attr('id'));
+		}).appendTo(div);
+		let watchGet;
+		switch(watchType){
+			case "WatchCurrentRMS":
+				$('<span>').html("Действующее значение тока на участке " + id.text() + ": ").appendTo(div);
+				watchGet = $('<span>').html(0);
+				watchGet.appendTo(div);
+				$('<span>').html(" A").appendTo(div);
+				addedWatch = new WatchCurrentRMS(parseInt(id.val()), watchGet);
+				break;
+			case "WatchVoltageRMS":
+				$('<span>').html("Действующее значение напряжения на участке " + id.text() + ": ").appendTo(div);
+				watchGet = $('<span>').html(0);
+				watchGet.appendTo(div);
+				$('<span>').html(" В").appendTo(div);
+				addedWatch = new WatchVoltageRMS(parseInt(id.val()), watchGet);
+				break;
+			case "WatchCurrentGraph":
+				$('<span>').html("График силы тока на участке " + id.text()).css("max-width", "200px").appendTo(div);
+				watchGet = $('<canvas/>',).attr("width", 220).attr("height", 200).css("border", "1px black solid").appendTo(div).get(0).getContext('2d');
+				addedWatch = new WatchCurrentGraph(parseInt(id.val()), watchGet);			
+				$('<div/>').attr('width', 220).slider({
+					range: true,
+					min: 0,
+					max: 10000,
+					values: [ 0, 10000 ],
+					slide: function( event, ui ) {
+						addedWatch.startValue = $(this).slider("values", 0) * 10;
+						if($(this).slider("values", 1) > 200)
+							addedWatch.endValue = $(this).slider("values", 1) * 10;
+						else
+							addedWatch.endValue = 10;
+						addedWatch.gui();
+					}
+				}).appendTo(div);
+				break;
+			case "WatchVoltageGraph":
+				$('<span>').html("График напряжения на участке " + id.text()).css("max-width", "200px").appendTo(div);
+				watchGet = $('<canvas/>',).attr("width", 220).attr("height", 200).css("border", "1px black solid").appendTo(div).get(0).getContext('2d');
+				addedWatch = new WatchVoltageGraph(parseInt(id.val()), watchGet);			
+				$('<div/>').attr('width', 220).slider({
+					range: true,
+					min: 0,
+					max: 10000,
+					values: [ 0, 10000 ],
+					slide: function( event, ui ) {
+						addedWatch.startValue = $(this).slider("values", 0) * 10;
+						if($(this).slider("values", 1) > 200)
+							addedWatch.endValue = $(this).slider("values", 1) * 10;
+						else
+							addedWatch.endValue = 10;
+						addedWatch.gui();
+					}
+				}).appendTo(div);
+			default:
+				break;
+		}
+		watches.set(GlobalWatchID, addedWatch);
+		GlobalWatchID++;
 	});
 });
 
@@ -172,7 +233,7 @@ function updateCoordinates(){
 function createLBarElement(edge){
 	let div = document.createElement("div");
 	div.setAttribute("id", "elementSettings" + edge.id);
-	div.setAttribute("style", "padding: 10px; border: 1px solid black; margin: 2px; padding-right: 30px; position: relative");
+	div.setAttribute("class", "barDiv");
 	
 	let text = document.createTextNode("Участок " + edge.startPoint.id + " <-> " + edge.endPoint.id);
 	div.appendChild(text);
@@ -386,11 +447,13 @@ function createLBarElement(edge){
 	
 	let del = document.createElement("input");
 	del.setAttribute("type", "button");
-	del.setAttribute("value", "Удалить");
+	del.setAttribute("value", "X");
+	del.setAttribute("class", "buttonBar");
 	del.style.top = "10px";
 	del.style.right = "10px";
 	del.style.position = "absolute";
 	del.style.zIndex = "1";
+	del.style.paddingLeft = del.style.paddingRight = "5px";
 	del.addEventListener("click", function(){
 		network.deleteEdge(edge.id);
 	}); 
@@ -432,7 +495,7 @@ function updateElementFromLBar(edge){
 	edge.power = parseFloat(t);
 	t = document.getElementById("state" + edge.id).checked;
 	edge.state = t;
-	actual = false;
+	watchesActual(false);
 }
 
 function updateLBarElement(id, index){
@@ -494,5 +557,15 @@ function updateDeleteElementDroplists(id){
 		if($(this).html() == id)
 			this.remove();
 	});
-	
+}
+
+function updateDeleteElementDroplistRight(id){
+	$('#addNewWatchSelectEdge option').each(function () {
+		if($(this).val() == id)
+			this.remove();
+	});
+}
+
+function updateAddElementDroplistRight(edge){
+	$('<option>').val(edge.id).text(edge.startPoint.id + " <-> " + edge.endPoint.id).appendTo('#addNewWatchSelectEdge');
 }

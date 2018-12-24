@@ -6,7 +6,7 @@ let hoverNode;
 let transX = 0, transY = 0;
 
 function initialDraw() {
-	canv.width = window.innerWidth - 540;
+	canv.width = window.innerWidth - 555;
 	canv.height = window.innerHeight - 35;	
     ctx.translate(canv.width * 0.5, canv.height * 0.5);
 	ctx.scale(scaleFactor, scaleFactor);
@@ -157,10 +157,10 @@ function drawEdge(edge) {
         ctx.beginPath();
         ctx.arc(0, 0, 10, 0, 2 * Math.PI);
 		let color;
-		if(!actual || typeof idToEdge == 'undefined' || typeof idToEdge.get(edge.id) == 'undefined' || typeof Currency == 'undefined' || typeof Currency[idToEdge.get(edge.id)] == 'undefined')
+		if(!actual || typeof idToEdge == 'undefined' || typeof idToEdge.get(edge.id) == 'undefined' || typeof Current == 'undefined' || typeof Current[idToEdge.get(edge.id)] == 'undefined')
 			color = 255;
 		else
-			color = scale(Math.pow(Currency[idToEdge.get(edge.id)], 2) * edge.resistance, 0, edge.power, 255, 0);
+			color = scale(Math.pow(Current[idToEdge.get(edge.id)], 2) * edge.resistance, 0, edge.power, 255, 0);
 		ctx.fillStyle = "rgb(255,255," + color + ")";
         ctx.fill();
         ctx.stroke();

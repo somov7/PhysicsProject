@@ -3,6 +3,8 @@ let network;
 let types = ["Empty", "Resistor", "Condensator", "Coil", "Switch", "Lamp", "Source"];
 let typesRu = ["Проводник", "Резистор", "Конденсатор", "Катушка", "Ключ", "Лампа", "Источник ЭДС"];
 
+let ready;
+
 const scale = (num, in_min, in_max, out_min, out_max) => {
   return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
@@ -23,6 +25,12 @@ function initial(){
 		opt.text = typesRu[i];
 		drop.appendChild(opt);
 	}
+	$('#resetButton').click(function(){
+		while(network.nodes.length > 0){ 
+			network.deleteNode(network.nodes[0].id);
+		}
+		network.globalNodeID = network.globalEdgeID = 0;
+	});
 }
 
 function cycle() {
@@ -31,7 +39,26 @@ function cycle() {
     initialDraw();
     drawNetwork();
 	ctx.restore();
-    window.requestAnimationFrame(cycle);
+	if(ready == 1){
+		$('#progress').css({
+			'display': 'flex',
+			'visibility': 'visible'
+		});
+		ready = 2;
+	}
+	else if(ready == 2){		
+		calculate();
+		$('#progress').css({
+			'display': 'none',
+			'visibility': 'hidden'
+		});
+		if(errNetwork != ""){
+			alert(errNetwork);
+			errNetwork = "";
+		}
+		ready = 0;
+	}
+	window.requestAnimationFrame(cycle);
 }
 
 function initSampleNetwork() {

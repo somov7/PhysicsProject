@@ -86,8 +86,7 @@ class Network {
         this.nodes.push(new Node(this.globalNodeID, _x, _y));
 		updateAddNewElementDroplists(this.globalNodeID);
 		this.globalNodeID++;
-		
-		actual = false;
+		watchesActual(false);
     }
 
     addEdge(sNodeId, eNodeId, t, param, param2, param3) {
@@ -113,7 +112,8 @@ class Network {
 		this.edges.push(addedEdge);
 		createLBarElement(addedEdge);
 		
-		actual = false;
+		updateAddElementDroplistRight(addedEdge);
+		watchesActual(false);
 	}
 	
 	deleteEdge(id){
@@ -121,9 +121,13 @@ class Network {
 			if(this.edges[i].id == id){
 				this.edges.splice(i, 1);
 				deleteElementFromLBar(id);					
-				return;
+				break;
 			}
-		actual = false;
+		updateDeleteElementDroplistRight(id);
+		$('#watchSettings').children('div .' + id).each( function(){
+			deleteWatch($(this).attr('id'));
+		});
+		watchesActual(false);
 	}
 	
 	deleteNode(id){
@@ -143,7 +147,7 @@ class Network {
 		}
 		
 		updateDeleteElementDroplists(id);
-		actual = false;
+		watchesActual(false);
 		
 	}
 }
